@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>성경적 5대 염려 대처 가이드라인</title>
+    <title>성경적 염려 분별 가이드라인 (HEAVY)</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -12,12 +12,12 @@
             --text: #333;
             --card-bg: #ffffff;
             
-            /* 5대 부류별 테마 색상 지정 */
-            --color-money: #2e7d32;   /* 물질: 초록 */
-            --color-future: #1565c0;  /* 미래: 파랑 */
-            --color-people: #6a1b9a;  /* 시선: 보라 */
-            --color-health: #c62828;  /* 건강: 빨강 */
-            --color-fail: #ef6c00;    /* 실패: 주황 */
+            /* HEAVY 부류별 테마 색상 */
+            --color-h: #c62828; /* Health: 빨강 */
+            --color-e: #2e7d32; /* Economy: 초록 */
+            --color-a: #ef6c00; /* Achievement: 주황 */
+            --color-v: #6a1b9a; /* View of others: 보라 */
+            --color-y: #1565c0; /* Yet-to-come: 파랑 */
         }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
@@ -30,229 +30,85 @@
             width: 100%; max-width: 1200px; box-sizing: border-box;
         }
         header h1 { color: var(--primary); margin: 0 0 12px 0; font-size: 2.4rem; }
+        header h1 span { color: #e74c3c; }
         header p { color: #7f8c8d; margin: 0; font-size: 1.1rem; }
 
-        /* 🌐 PC 와이드 화면 전체를 활용하는 가로형 격자 레이아웃 */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* PC에서는 5개 카드가 나란히 배분 */
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
-            width: 100%;
-            max-width: 1600px;
-            padding: 30px 20px;
-            box-sizing: border-box;
-            align-items: start; /* 높이가 다른 카드가 각각 자유롭게 늘어나도록 설정 */
+            width: 100%; max-width: 1600px;
+            padding: 30px 20px; box-sizing: border-box;
+            align-items: start;
         }
 
-        /* 🛠️ 풀다운(Dropdown) 스타일의 개별 부류 상자 */
         .worry-card {
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            cursor: pointer;
+            background: var(--card-bg); border: 2px solid var(--primary); border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); cursor: pointer;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden; display: flex; flex-direction: column;
         }
-        .worry-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-        }
+        .worry-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
 
-        /* 카드 상단 타이틀 영역 */
         .card-header {
-            padding: 20px 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: white;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            position: relative;
+            padding: 20px 15px; font-weight: bold; color: white; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
         }
-        .card-header .icon { font-size: 2rem; }
-        .card-header .arrow {
-            font-size: 0.8rem; margin-top: 5px; opacity: 0.8;
-            transition: transform 0.3s;
-        }
+        .card-header .initial { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; }
+        .card-header .title { font-size: 1.05rem; }
+        .card-header .arrow { font-size: 0.8rem; margin-top: 5px; opacity: 0.8; transition: transform 0.3s; }
         .worry-card.active .arrow { transform: rotate(180deg); }
 
-        /* 🔽 내용 잘림 오류 완벽 해결 영역 */
         .card-body {
-            max-height: 0;
-            overflow: hidden;
-            /* 구절과 행동 지침이 아무리 길어져도 자동 계산되어 자연스럽게 열리도록 변경 */
+            max-height: 0; overflow: hidden;
             transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             background: #ffffff;
         }
-        /* active 상태일 때 높이 한계치를 아주 넉넉하게 설정하여 스크롤 잘림 현상 제거 */
-        .worry-card.active .card-body {
-            max-height: 1200px; 
-        }
-        .card-content {
-            padding: 20px 15px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #475569;
-        }
+        .worry-card.active .card-body { max-height: 1200px; }
+        .card-content { padding: 20px 15px; font-size: 0.95rem; line-height: 1.6; color: #475569; }
         
-        /* 진단 및 액션플랜 박스 양식 */
         .diagnosis-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 14px; margin-bottom: 12px; font-size: 0.9rem;
         }
         .diagnosis-box strong { color: var(--primary); display: block; margin-bottom: 6px; }
 
-        /* ✝️ 성경 구절 카드 디자인 (대처 행동 위로 배치) */
-        .verse-box {
-            border-left: 4px solid var(--accent);
-            padding: 14px;
-            font-style: italic;
-            font-size: 0.9rem;
-            border-radius: 0 6px 6px 0;
-            margin-bottom: 12px;
-        }
-        .verse-ref {
-            display: block;
-            text-align: right;
-            font-weight: bold;
-            font-style: normal;
-            font-size: 0.8rem;
-            margin-top: 6px;
-        }
+        .verse-box { border-left: 4px solid var(--accent); padding: 14px; font-style: italic; font-size: 0.9rem; border-radius: 0 6px 6px 0; margin-bottom: 12px; }
+        .verse-ref { display: block; text-align: right; font-weight: bold; font-style: normal; font-size: 0.8rem; margin-top: 6px; }
 
-        /* 각 부류별 테마 색상 매칭 */
-        .type-money { border-color: var(--color-money); }
-        .type-money .card-header { background: var(--color-money); }
-        .type-money .verse-box { background: #f0fdf4; border-left-color: var(--color-money); color: #16a34a; }
-        .type-money .verse-ref { color: #15803d; }
+        /* 부류별 테마 색상 맵핑 */
+        .type-h { border-color: var(--color-h); } .type-h .card-header { background: var(--color-h); }
+        .type-h .verse-box { background: #fef2f2; border-left-color: var(--color-h); color: #dc2626; } .type-h .verse-ref { color: #b91c1c; }
 
-        .type-future { border-color: var(--color-future); }
-        .type-future .card-header { background: var(--color-future); }
-        .type-future .verse-box { background: #f0f9ff; border-left-color: var(--color-future); color: #0284c7; }
-        .type-future .verse-ref { color: #0369a1; }
+        .type-e { border-color: var(--color-e); } .type-e .card-header { background: var(--color-e); }
+        .type-e .verse-box { background: #f0fdf4; border-left-color: var(--color-e); color: #16a34a; } .type-e .verse-ref { color: #15803d; }
 
-        .type-people { border-color: var(--color-people); }
-        .type-people .card-header { background: var(--color-people); }
-        .type-people .verse-box { background: #faf5ff; border-left-color: var(--color-people); color: #9333ea; }
-        .type-people .verse-ref { color: #7e22ce; }
+        .type-a { border-color: var(--color-a); } .type-a .card-header { background: var(--color-a); }
+        .type-a .verse-box { background: #fff7ed; border-left-color: var(--color-a); color: #ea580c; } .type-a .verse-ref { color: #c2410c; }
 
-        .type-health { border-color: var(--color-health); }
-        .type-health .card-header { background: var(--color-health); }
-        .type-health .verse-box { background: #fef2f2; border-left-color: var(--color-health); color: #dc2626; }
-        .type-health .verse-ref { color: #b91c1c; }
+        .type-v { border-color: var(--color-v); } .type-v .card-header { background: var(--color-v); }
+        .type-v .verse-box { background: #faf5ff; border-left-color: var(--color-v); color: #9333ea; } .type-v .verse-ref { color: #7e22ce; }
 
-        .type-fail { border-color: var(--color-fail); }
-        .type-fail .card-header { background: var(--color-fail); }
-        .type-fail .verse-box { background: #fff7ed; border-left-color: var(--color-fail); color: #ea580c; }
-        .type-fail .verse-ref { color: #c2410c; }
+        .type-y { border-color: var(--color-y); } .type-y .card-header { background: var(--color-y); }
+        .type-y .verse-box { background: #f0f9ff; border-left-color: var(--color-y); color: #0284c7; } .type-y .verse-ref { color: #0369a1; }
 
-        /* 📱 화면 반응형 설정 (태블릿이나 스마트폰 환경에서는 세로형 리스트로 자동 정렬) */
-        @media (max-width: 1200px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-                max-width: 550px;
-            }
-        }
+        @media (max-width: 1200px) { .grid-container { grid-template-columns: 1fr; max-width: 550px; } }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>✝️ 성경적 5대 염려 대처 가이드라인</h1>
-    <p>지금 나의 마음을 무겁게 하는 염려의 부류를 선택하여 말씀의 해답을 확인하십시오.</p>
+    <h1>✝ 마음의 무거운 짐 내려놓기: <span>HEAVY</span></h1>
+    <p>내 감정과 생각을 짓누르는 5가지 무거운 염려(HEAVY)를 말씀의 거울 앞에 비추어보십시오.</p>
 </header>
 
 <div class="grid-container">
     
-    <!-- 1. 물질과 생계 -->
-    <div class="worry-card type-money" onclick="toggleCard(this)">
+    <!-- H: Health (건강과 안전) -->
+    <div class="worry-card type-h" onclick="toggleCard(this)">
         <div class="card-header">
-            <span class="icon">💰</span>
-            <span>1. 물질과 생계의 염려</span>
-            <span class="arrow">▼ 내용 보기</span>
-        </div>
-        <div class="card-body">
-            <div class="card-content">
-                <div class="diagnosis-box">
-                    <strong>🩺 영적 원인 진단</strong>
-                    내 모든 삶을 채우시고 먹이시는 분이 '하나님 아버지'이심을 온전히 신뢰하지 못할 때 찾아오는 생존의 불안입니다.
-                </div>
-                <div class="verse-box">
-                    "오늘 있다가 내일 아궁이에 던져지는 들풀도 하나님이 이렇게 입히시거든 하물며 너희일까보냐 믿음이 작은 자들아 그러므로 염려하여 이르기를 무엇을 먹을까 무엇을 마실까 무엇을 입을까 하지 말라"
-                    <span class="verse-ref">마태복음 6:30-31</span>
-                </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    하늘을 나는 새와 들풀도 입히시는 주님을 바라보며, 재정의 염려를 감사의 기도로 바꾸고 오늘 주신 것에 자족하는 연습을 하십시오.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. 아직 오지 않은 미래 -->
-    <div class="worry-card type-future" onclick="toggleCard(this)">
-        <div class="card-header">
-            <span class="icon">⏳</span>
-            <span>2. 가상 미래의 염려</span>
-            <span class="arrow">▼ 내용 보기</span>
-        </div>
-        <div class="card-body">
-            <div class="card-content">
-                <div class="diagnosis-box">
-                    <strong>🩺 영적 원인 진단</strong>
-                    시간의 주인인 주님을 제쳐두고, 아직 오지 않은 내일을 내 힘과 계산으로 통제하려는 조급함과 교만에서 생깁니다.
-                </div>
-                <div class="verse-box">
-                    "그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요 한 날의 괴로움은 그 날로 족하니라"
-                    <span class="verse-ref">마태복음 6:34</span>
-                </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    '내일'이라는 가상의 짐을 오늘로 가져오지 마십시오. 오늘 내게 주어진 시간의 문만 걸어 잠그고 주님과 단 한 걸음씩만 동행하십시오.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. 타인의 시선과 인정 -->
-    <div class="worry-card type-people" onclick="toggleCard(this)">
-        <div class="card-header">
-            <span class="icon">👥</span>
-            <span>3. 타인의 시선과 인정</span>
-            <span class="arrow">▼ 내용 보기</span>
-        </div>
-        <div class="card-body">
-            <div class="card-content">
-                <div class="diagnosis-box">
-                    <strong>🩺 영적 원인 진단</strong>
-                    나의 절대적인 정체성을 하나님의 시선이 아닌, 사람들의 일시적인 평가와 거절감, 소외감에 둘 때 걸리는 영적 올무입니다.
-                </div>
-                <div class="verse-box">
-                    "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
-                    <span class="verse-ref">잠언 29:25</span>
-                </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    사람을 만족시키는 인생이 아닌 하나님을 기쁘시게 하는 사명자로 서십시오. 사람의 판단보다 나를 아시는 주님의 음성에 귀를 기울여야 합니다.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. 건강과 신체적 안전 -->
-    <div class="worry-card type-health" onclick="toggleCard(this)">
-        <div class="card-header">
-            <span class="icon">🏥</span>
-            <span>4. 건강과 신체 안전</span>
+            <span class="initial">H</span>
+            <span class="title">ealth & Safety (건강과 안전)</span>
             <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
@@ -267,17 +123,41 @@
                 </div>
                 <div class="diagnosis-box">
                     <strong>🏃 성경적 대처 행동</strong>
-                    의학적인 치료와 예방에 힘쓰되, 육신의 키와 생명은 주님의 주권임을 인정하십시오. 나를 끝까지 돌보시는 하나님께 머리를 맡기십시오.
+                    의학적인 치료와 예방에 힘쓰되, 육신의 키와 생명은 주님의 주권임을 인정하십시오. 나를 끝까지 돌보시는 하나님께 전적으로 의탁하십시오.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 5. 성취와 실패의 염려 -->
-    <div class="worry-card type-fail" onclick="toggleCard(this)">
+    <!-- E: Economy (물질과 생계) -->
+    <div class="worry-card type-e" onclick="toggleCard(this)">
         <div class="card-header">
-            <span class="icon">📉</span>
-            <span>5. 성취와 실패의 염려</span>
+            <span class="initial">E</span>
+            <span class="title">conomy & Living (물질과 생계)</span>
+            <span class="arrow">▼ 내용 보기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    내 모든 삶을 채우시고 먹이시는 분이 '하나님 아버지'이심을 온전히 신뢰하지 못할 때 찾아오는 생존의 불안입니다.
+                </div>
+                <div class="verse-box">
+                    "오늘 있다가 내일 아궁이에 던져지는 들풀도 하나님이 이렇게 입히시거든 하물며 너희일까보냐 믿음이 작은 자들아 그러므로 염려하여 이르기를 무엇을 먹을까 무엇을 마실까 무엇을 입을까 하지 말라"
+                    <span class="verse-ref">마태복음 6:30-31</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    하늘을 나는 새와 들풀도 입히시는 주님을 바라보며, 재정의 염려를 감사의 기도로 바꾸고 오늘 내 손에 쥐어주신 것에 자족하는 연습을 하십시오.
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- A: Achievement (성취와 실패) -->
+    <div class="worry-card type-a" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="initial">A</span>
+            <span class="title">chievement (성취와 실패)</span>
             <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
@@ -298,10 +178,59 @@
         </div>
     </div>
 
+    <!-- V: View of others (타인의 시선) -->
+    <div class="worry-card type-v" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="initial">V</span>
+            <span class="title">iew of others (타인의 시선과 인정)</span>
+            <span class="arrow">▼ 내용 보기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    나의 절대적인 정체성을 하나님의 시선이 아닌, 사람들의 일시적인 평가와 거절감, 소외감에 둘 때 걸리는 영적 올무입니다.
+                </div>
+                <div class="verse-box">
+                    "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
+                    <span class="verse-ref">잠언 29:25</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    사람을 만족시키는 인생이 아닌 하나님을 기쁘시게 하는 사명자로 서십시오. 사람의 판단보다 나를 세상에 보내신 주님의 음성에 귀를 기울여야 합니다.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Y: Yet-to-come Future (가상 미래) -->
+    <div class="worry-card type-y" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="initial">Y</span>
+            <span class="title">et-to-come Future (가상 미래)</span>
+            <span class="arrow">▼ 내용 보기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    시간의 주인인 주님을 제쳐두고, 아직 오지 않은 내일을 내 힘과 계산으로 통제하려는 조급함과 교만에서 생깁니다.
+                </div>
+                <div class="verse-box">
+                    "그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요 한 날의 괴로움은 그 날로 족하니라"
+                    <span class="verse-ref">마태복음 6:34</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    '내일'이라는 가상의 짐을 오늘로 가져오지 마십시오. 오늘 내게 주어진 시간의 문만 걸어 잠그고 주님과 단 한 걸음씩만 동행하십시오.
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div> <!-- .grid-container 끝 -->
 
 <script>
-    // 카드를 클릭하면 active 클래스를 토글하여 높이 제한 없이 자연스럽게 끝까지 늘려주는 스크립트
     function toggleCard(cardElement) {
         cardElement.classList.toggle('active');
     }
@@ -309,3 +238,4 @@
 </body>
 </html>
 
+    <!-- 코드가 잘리지 않도록 하단 스크립트와 A, V, Y 카드가 아래 답변에서 연속으로 이어집니다. -->
