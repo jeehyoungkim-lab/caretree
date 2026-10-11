@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>성경적 염려 원인별 심층 분기 트리</title>
+    <title>성경적 5대 염려 대처 가이드라인</title>
     <style>
         :root {
             --primary: #2c3e50;
             --accent: #18bc9c;
             --bg: #f8f9fa;
             --text: #333;
-            --line-color: #cbd5e1;
-            --trust-color: #3498db;
-            --action-color: #e67e22;
-            --purple-color: #9b59b6;
+            --card-bg: #ffffff;
+            
+            /* 5대 부류별 테마 색상 지정 */
+            --color-money: #2e7d32;   /* 물질: 초록 */
+            --color-future: #1565c0;  /* 미래: 파랑 */
+            --color-people: #6a1b9a;  /* 시선: 보라 */
+            --color-health: #c62828;  /* 건강: 빨강 */
+            --color-fail: #ef6c00;    /* 실패: 주황 */
         }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
@@ -22,228 +26,282 @@
             display: flex; flex-direction: column; align-items: center;
         }
         header {
-            text-align: center; padding: 40px 20px 10px 20px;
+            text-align: center; padding: 50px 20px 20px 20px;
             width: 100%; max-width: 1200px; box-sizing: border-box;
         }
-        header h1 { color: var(--primary); margin: 0 0 10px 0; font-size: 2.2rem; }
+        header h1 { color: var(--primary); margin: 0 0 12px 0; font-size: 2.4rem; }
         header p { color: #7f8c8d; margin: 0; font-size: 1.1rem; }
 
-        .tree-wrapper {
-            width: 100%; max-width: 1600px; padding: 30px 20px;
-            box-sizing: border-box; overflow-x: auto;
+        /* 🌐 PC 와이드 화면 전체를 활용하는 5분할 격자 레이아웃 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* PC에서는 5개 카드가 나란히 배치 */
+            gap: 20px;
+            width: 100%;
+            max-width: 1600px;
+            padding: 30px 20px;
+            box-sizing: border-box;
         }
-        .tree, .tree ul, .tree li { list-style: none; margin: 0; padding: 0; position: relative; }
-        .tree { display: flex; justify-content: center; }
-        .tree ul { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .tree li { display: flex; flex-direction: column; align-items: center; position: relative; }
 
-        /* 연결선 및 Yes/No 뱃지 기본 구조 */
-        .tree ul::before {
-            content: ''; position: absolute; top: -50px; left: 50%;
-            width: 2px; height: 50px; background: var(--line-color);
+        /* 🛠️ 풀다운(Dropdown) 스타일의 개별 부류 상자 */
+        .worry-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
         }
-        .tree li::before, .tree li::after {
-            content: ''; position: absolute; top: -50px;
-            width: 50%; height: 2px; background: var(--line-color);
+        .worry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
         }
-        .tree li::before { left: 50%; }
-        .tree li::after { right: 50%; }
-        .tree li:first-child::before, .tree li:last-child::after { display: none; }
 
-        .badge-line {
-            position: absolute; top: -38px; z-index: 15;
-            font-size: 0.75rem; font-weight: bold; padding: 3px 8px;
-            border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* 카드 상단 타이틀 영역 */
+        .card-header {
+            padding: 20px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
         }
-        .badge-no { background: #fee2e2; color: #ef4444; left: 10%; }
-        .badge-yes { background: #dcfce7; color: #22c55e; right: 10%; }
+        .card-header .icon { font-size: 2rem; }
+        .card-header .arrow {
+            font-size: 0.8rem; margin-top: 5px; opacity: 0.8;
+            transition: transform 0.3s;
+        }
+        .worry-card.active .arrow { transform: rotate(180deg); }
 
-        /* 상자 패널 스타일 */
-        .node-box {
-            background: #ffffff; border: 2px solid var(--primary); border-radius: 10px;
-            width: 310px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            cursor: pointer; z-index: 10; transition: all 0.2s ease; box-sizing: border-box;
-        }
-        .node-box:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-        .node-header {
-            padding: 14px 18px; font-weight: bold; font-size: 1rem;
-            background-color: #f8fafc; border-radius: 8px 8px 0 0;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .node-header .arrow { font-size: 0.8rem; color: #94a3b8; transition: transform 0.3s; }
-        .node-box.active .arrow { transform: rotate(180deg); color: var(--accent); }
-        
-        .node-body {
-            max-height: 0; overflow: hidden;
+        /* 🔽 클릭 시 아래로 슥 열리는 풀다운 애니메이션 본문 */
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #ffffff; border-radius: 0 0 8px 8px;
+            background: #ffffff;
         }
-        .node-box.active .node-body { max-height: 450px; }
-        .node-content { padding: 18px; font-size: 0.95rem; line-height: 1.6; color: #475569; }
+        .worry-card.active .card-body {
+            max-height: 600px; /* 상세 텍스트가 다 나오도록 여유 있게 설정 */
+        }
+        .card-content {
+            padding: 20px 15px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #475569;
+        }
         
-        .verse-box {
-            background: #f0fdf4; border-left: 4px solid var(--accent);
-            padding: 10px 12px; margin-top: 10px; font-style: italic;
-            font-size: 0.85rem; border-radius: 0 6px 6px 0; color: #16a34a;
+        /* 영적 진단 및 액션플랜 박스 */
+        .diagnosis-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
         }
-        .verse-ref { display: block; text-align: right; font-weight: bold; font-style: normal; font-size: 0.8rem; color: #15803d; margin-top: 4px; }
+        .diagnosis-box strong { color: var(--primary); display: block; margin-bottom: 4px; }
 
-        .border-trust { border-color: var(--trust-color); }
-        .border-action { border-color: var(--action-color); }
-        .border-purple { border-color: var(--purple-color); }
+        /* ✝️ 성경 구절 카드 디자인 */
+        .verse-box {
+            border-left: 4px solid var(--accent);
+            padding: 12px;
+            font-style: italic;
+            font-size: 0.9rem;
+            border-radius: 0 6px 6px 0;
+            margin-top: 10px;
+        }
+        .verse-ref {
+            display: block;
+            text-align: right;
+            font-weight: bold;
+            font-style: normal;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
 
+        /* 각 부류별 테마 색상 매칭 */
+        .type-money { border-color: var(--color-money); }
+        .type-money .card-header { background: var(--color-money); }
+        .type-money .verse-box { background: #f0fdf4; border-left-color: var(--color-money); color: #16a34a; }
+        .type-money .verse-ref { color: #15803d; }
+
+        .type-future { border-color: var(--color-future); }
+        .type-future .card-header { background: var(--color-future); }
+        .type-future .verse-box { background: #f0f9ff; border-left-color: var(--color-future); color: #0284c7; }
+        .type-future .verse-ref { color: #0369a1; }
+
+        .type-people { border-color: var(--color-people); }
+        .type-people .card-header { background: var(--color-people); }
+        .type-people .verse-box { background: #faf5ff; border-left-color: var(--color-people); color: #9333ea; }
+        .type-people .verse-ref { color: #7e22ce; }
+
+        .type-health { border-color: var(--color-health); }
+        .type-health .card-header { background: var(--color-health); }
+        .type-health .verse-box { background: #fef2f2; border-left-color: var(--color-health); color: #dc2626; }
+        .type-health .verse-ref { color: #b91c1c; }
+
+        .type-fail { border-color: var(--color-fail); }
+        .type-fail .card-header { background: var(--color-fail); }
+        .type-fail .verse-box { background: #fff7ed; border-left-color: var(--color-fail); color: #ea580c; }
+        .type-fail .verse-ref { color: #c2410c; }
+
+        /* 📱 모바일 화면 최적화 (가로폭이 좁아지면 가로형 카드가 세로로 1줄씩 예쁘게 정렬됨) */
         @media (max-width: 1200px) {
-            .tree, .tree ul { flex-direction: column; align-items: center; gap: 30px; }
-            .tree ul { margin-top: 30px; }
-            .tree ul::before, .tree li::before, .tree li::after, .badge-line { display: none; }
-            .node-box { width: 95vw; max-width: 400px; }
+            .grid-container {
+                grid-template-columns: 1fr; /* 모바일/태블릿에서는 1열 */
+                max-width: 500px;
+            }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>✝️ 성경적 염려 원인 진단 흐름도</h1>
-    <p>내 마음에 깃든 걱정의 진짜 '이유'를 추적하여 말씀의 답을 내리는 다단계 분기 트리입니다.</p>
+    <h1>✝️ 성경적 5대 염려 대처 가이드라인</h1>
+    <p>지금 나의 마음을 무겁게 하는 염려의 부류를 선택하여 말씀의 해답을 확인하십시오.</p>
 </header>
 
-<div class="tree-wrapper">
-    <div class="tree">
-        <ul>
-            <!-- 💡 [루트] 1단계: 마태복음 필터 -->
-            <li>
-                <div class="node-box" onclick="toggleNode(this)">
-                    <div class="node-header">
-                        <span>🙏 시작: 내 마음에 집중하기</span>
-                        <span class="arrow">▼</span>
-                    </div>
-                    <div class="node-body">
-                        <div class="node-content">
-                            기도하며 질문을 묵상하십시오. 
-                            <p style="font-weight:bold; color:var(--primary); margin-top:8px;">❓ 질문: 이 걱정을 해결하는 과정이 "하나님의 나라와 의"를 구하는 사명 영역인가요?</p>
-                            <div class="verse-box">
-                                "그런즉 너희는 먼저 그의 나라와 그의 의를 구하라..."
-                                <span class="verse-ref">마태복음 6:33</span>
-                            </div>
-                        </div>
-                    </div>
+<div class="grid-container">
+    
+    <!-- 1. 물질과 생계 -->
+    <div class="worry-card type-money" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="icon">💰</span>
+            <span>1. 물질과 생계의 염려</span>
+            <span class="arrow">▼ 내용 열기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    내 모든 삶을 채우시고 먹이시는 분이 '하나님 아버지'이심을 온전히 신뢰하지 못할 때 찾아오는 생존의 불안입니다.
                 </div>
-
-                <ul>
-                    <!-- 💡 [왼쪽 분기] No: 사명 영역이 아님 (걱정의 구체적 원인 분석 단계로 진입) -->
-                    <li>
-                        <span class="badge-line badge-no">사명 아님 (No)</span>
-                        <div class="node-box border-purple" onclick="toggleNode(this)">
-                            <div class="node-header">
-                                <span>🔍 2단계: 걱정의 이유 찾기</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="node-body">
-                                <div class="node-content">
-                                    주님의 일이 아닌데 왜 내 마음이 묶여있을까요? 진짜 원인을 고르십시오.
-                                    <p style="font-weight:bold; color:var(--purple-color); margin-top:8px;">❓ 질문: 이 걱정의 이유가 "타인의 시선과 인정" 혹은 "세상 욕심과 비교" 때문인가요?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <ul>
-                            <!-- 💡 [2단계의 왼쪽] Yes: 타인 시선 / 물질 탐심 때문임 -->
-                            <li>
-                                <span class="badge-line badge-yes">욕심/인정 (Yes)</span>
-                                <div class="node-box active" style="cursor: default; border-color: var(--purple-color);">
-                                    <div class="node-header" style="background-color: #faf5ff;">
-                                        <span style="color: var(--purple-color);">❤️ 처방: 동기 정결 및 회개</span>
-                                    </div>
-                                    <div class="node-content">
-                                        비교의식과 탐심은 우리 영혼을 갉아먹습니다. 사람의 인정을 구하지 말고 하나님 앞에 자족함을 선포하십시오.
-                                        <div class="verse-box" style="background:#faf5ff; border-left-color: var(--purple-color); color: #7e22ce;">
-                                            "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
-                                            <span class="verse-ref" style="color:#7e22ce;">잠언 29:25</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <!-- 💡 [2단계의 오른쪽] No: 내 욕심이 아니라, 다가올 미래가 그냥 막연히 두려운 것임 -->
-                            <li>
-                                <span class="badge-line badge-no">미래 두려움 (No)</span>
-                                <div class="node-box border-trust" onclick="toggleNode(this)">
-                                    <div class="node-header">
-                                        <span>☁️ 3단계: 주권 영역 확인</span>
-                                        <span class="arrow">▼</span>
-                                    </div>
-                                    <div class="node-body">
-                                        <div class="node-content">
-                                            막연한 불안감에 속고 계신가요?
-                                            <p style="font-weight:bold; color:var(--trust-color); margin-top:8px;">❓ 질문: 내가 오늘 아무리 머리를 싸매도 당장 통제할 수 없는 '내일의 영역'인가요?</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <ul>
-                                    <li>
-                                        <div class="node-box active" style="cursor: default; border-color: var(--trust-color);">
-                                            <div class="node-header" style="background-color: #e0f2fe;">
-                                                <span style="color: var(--trust-color);">🤝 최종처방: 기도로 완전 위탁</span>
-                                            </div>
-                                            <div class="node-content">
-                                                지나간 과거와 가상의 미래는 하나님의 시간입니다. 선하신 주권에 짐을 완전히 던지세요.
-                                                <div class="verse-box" style="background:#f0f9ff; border-left-color: var(--trust-color); color: #0369a1;">
-                                                    "그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요..."
-                                                    <span class="verse-ref" style="color:#0369a1;">마태복음 6:34</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- 💡 [오른쪽 분기] Yes: 사명 영역임 (주의 일을 행할 때 찾아오는 부담감) -->
-                    <li>
-                        <span class="badge-line badge-yes">사명 영역 (Yes)</span>
-                        <div class="node-box border-action" onclick="toggleNode(this)">
-                            <div class="node-header">
-                                <span>🛠️ 순종 단계: 행동 계획 수립</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="node-body">
-                                <div class="node-content">
-                                    주님의 뜻을 이루기 위한 거룩한 부담감이 마음에 머물러 있는 상태입니다.
-                                    <p style="font-weight:bold; color:var(--action-color); margin-top:8px;">❓ 질문: 주님이 지금 당장 움직이도록 내 마음에 명확한 감동이나 행동을 보여주셨나요?</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <ul>
-                            <li>
-                                <div class="node-box active" style="cursor: default; border-color: var(--action-color);">
-                                    <div class="node-header" style="background-color: #ffedd5;">
-                                        <span style="color: var(--action-color);">🏃 최종처방: 믿음의 즉시 순종</span>
-                                    </div>
-                                    <div class="node-content">
-                                        생각에 갇히면 두려움이 자랍니다. 오늘 즉시 5분 안에 실천할 수 있는 가장 작은 행동을 주님 의지함으로 취하십시오.
-                                        <div class="verse-box" style="background:#fff7ed; border-left-color: var(--action-color); color: #c2410c;">
-                                            "강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라"
-                                            <span class="verse-ref" style="color: #c2410c;">여호수아 1:9</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-
-            </li>
-        </ul>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    하늘을 나는 새와 들풀도 입히시는 주님을 바라보며, 재정의 염려를 감사의 기도로 바꾸고 오늘 주신 것에 자족하는 연습을 하십시오.
+                </div>
+                <div class="verse-box">
+                    "오늘 있다가 내일 아궁이에 던져지는 들풀도 하나님이 이렇게 입히시거든 하물며 너희일까보냐 믿음이 작은 자들아 그러므로 염려하여 이르기를 무엇을 먹을까 무엇을 마실까 무엇을 입을까 하지 말라"
+                    <span class="verse-ref">마태복음 6:30-31</span>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- 2. 아직 오지 않은 미래 -->
+    <div class="worry-card type-future" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="icon">⏳</span>
+            <span>2. 가상 미래의 염려</span>
+            <span class="arrow">▼ 내용 열기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    시간의 주인인 주님을 제쳐두고, 아직 오지 않은 내일을 내 힘과 계산으로 통제하려는 조급함과 교만에서 생깁니다.
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    '내일'이라는 가상의 짐을 오늘로 가져오지 마십시오. 오늘 내게 주어진 시간의 문만 걸어 잠그고 주님과 단 한 걸음씩만 동행하십시오.
+                </div>
+                <div class="verse-box">
+                    "그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요 한 날의 괴로움은 그 날로 족하니라"
+                    <span class="verse-ref">마태복음 6:34</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 타인의 시선과 인정 -->
+    <div class="worry-card type-people" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="icon">👥</span>
+            <span>3. 타인의 시선과 인정</span>
+            <span class="arrow">▼ 내용 열기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    나의 절대적인 정체성을 하나님의 시선이 아닌, 사람들의 일시적인 평가와 거절감, 소외감에 둘 때 걸리는 영적 올무입니다.
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    사람을 만족시키는 인생이 아닌 하나님을 기쁘시게 하는 사명자로 서십시오. 사람의 판단보다 나를 아시는 주님의 음성에 귀를 기울여야 합니다.
+                </div>
+                <div class="verse-box">
+                    "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
+                    <span class="verse-ref">잠언 29:25</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 건강과 신체적 안전 -->
+    <div class="worry-card type-health" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="icon">🏥</span>
+            <span>4. 건강과 신체 안전</span>
+            <span class="arrow">▼ 내용 열기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    육신의 질병과 약해짐, 나아가 죽음의 공포가 내 생명의 연한을 쥐고 계신 창조주 하나님의 권능보다 크게 느껴질 때 발생합니다.
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    의학적인 치료와 예방에 힘쓰되, 육신의 키와 생명은 주님의 주권임을 인정하십시오. 나를 끝까지 돌보시는 하나님께 머리를 맡기십시오.
+                </div>
+                <div class="verse-box">
+                    "너희 중에 누가 염려함으로 그 키를 한 자라도 더할 수 있느냐... 너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
+                    <span class="verse-ref">마태복음 6:27 / 베드로전서 5:7</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 성취와 실패의 염려 -->
+    <div class="worry-card type-fail" onclick="toggleCard(this)">
+        <div class="card-header">
+            <span class="icon">📉</span>
+            <span>5. 성취와 실패의 염려</span>
+            <span class="arrow">▼ 내용 열기</span>
+        </div>
+        <div class="card-body">
+            <div class="card-content">
+                <div class="diagnosis-box">
+                    <strong>🩺 영적 원인 진단</strong>
+                    세상의 성공 기준과 나를 계속 비교하며 뒤처질까 봐 불안해하는 세상의 욕심(탐심)이 생각의 중심을 채우고 있는 상태입니다.
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    성공과 실패의 정의를 세상의 기준에서 하나님의 뜻으로 바꾸십시오. 세상의 성공을 좇는 염려를 내려놓고 주님의 의를 구할 때 삶의 모든 필요가 보너스로 채워집니다.
+                </div>
+                <div class="verse-box">
+                    "너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라"
+                    <span class="verse-ref">마태복음 6:33</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- .grid-container 끝 -->
 
 <script>
-    function toggleNode(boxElement) {
-        boxElement.classList.toggle('active');
+    // 카드를 클릭하면 active 클래스를 토글하여 아래로 풀다운 슬라이드 시키는 기능
+    function toggleCard(cardElement) {
+        cardElement.classList.toggle('active');
     }
 </script>
 </body>
