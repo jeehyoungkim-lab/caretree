@@ -3,310 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>성경적 염려 대처 가이드라인</title>
-    <!-- Mermaid.js 라이브러리 로드 (트리 구조 시각화) -->
-    <script src="https://jsdelivr.net"></script>
-    <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+    <title>성경적 염려 대처 통합 트리 가이드라인</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #18bc9c;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #18bc9c;
+            --bg: #f8f9fa;
+            --text: #333;
+            --line-color: #cbd5e1;
+            --trust-color: #3498db;
+            --action-color: #e67e22;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
-        /* 전체 컨테이너: PC에서는 최대 1400px까지 넓게 활용 */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
         header {
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 20px;
+            padding: 40px 20px 20px 20px;
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
         }
         header h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-size: 2.4rem;
         }
         header p {
             color: #7f8c8d;
+            margin: 0;
             font-size: 1.1rem;
         }
 
-        /* 💡 반응형 핵심 레이아웃: PC에서는 가로 정렬, 모바일에서는 세로 정렬 */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr; /* 모바일 디폴트: 1열 */
-            gap: 30px;
-            align-items: start;
-        }
-
-        /* 미디어 쿼리: PC 화면 (992px 이상) 일 때 와이드 스타일 적용 */
-        @media (min-width: 992px) {
-            .main-layout {
-                grid-template-columns: 1.2fr 1fr; /* 좌우 1.2:1 비율로 배치 */
-            }
-            .sticky-aside {
-                position: sticky;
-                top: 20px; /* 스크롤할 때 오른쪽 패널이 화면에 고정됨 */
-            }
-        }
-
-        .section {
-            background: var(--card-bg);
-            padding: 30px;
-            margin-bottom: 0; /* grid gap으로 조절 */
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        /* 🌐 PC 와이드 화면 전체를 사용하는 가로형 트리 컨테이너 */
+        .tree-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            padding: 40px 20px;
             box-sizing: border-box;
-        }
-        .section h2 {
-            color: var(--primary-color);
-            border-left: 5px solid var(--accent-color);
-            padding-left: 15px;
-            margin-top: 0;
-            font-size: 1.4rem;
+            overflow-x: auto; /* 화면이 아주 작아지면 가로 스크롤 제공 */
         }
 
-        /* 트리 다이어그램 스타일: 넓은 화면에서 스크롤 없이 시원하게 표시 */
-        .mermaid-box {
-            overflow-x: auto;
-            padding: 10px 0;
-            background: #ffffff;
-            border-radius: 8px;
+        /* CSS 트리 구조 레이아웃 정의 */
+        .tree, .tree ul, .tree li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
         }
-        .mermaid {
+        .tree {
             display: flex;
             justify-content: center;
         }
+        .tree ul {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px; /* 위아래 노드 간격 */
+        }
+        .tree li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
 
-        /* 말씀 카드 스타일 */
-        .verse-card {
-            background-color: #f1f8f6;
-            border-left: 4px solid var(--accent-color);
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
+        /* 📐 순수 CSS로 그리는 완벽한 연결선 (트리의 뼈대) */
+        /* 상단 세로선 */
+        .tree ul::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            width: 2px;
+            height: 40px;
+            background: var(--line-color);
+        }
+        /* 자식들을 잇는 가로선 */
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            width: 50%;
+            height: 2px;
+            background: var(--line-color);
+        }
+        .tree li::before { left: 50%; }
+        .tree li::after { right: 50%; }
+        /* 단일 자식이거나 양 끝 자식의 선 정리 */
+        .tree li:first-child::before { display: none; }
+        .tree li:last-child::after { display: none; }
+        .tree li:only-child::before, .tree li:only-child::after { display: none; }
+
+        /* 🛠️ 풀다운(Dropdown) 폴더 스타일의 상자 패널 */
+        .node-box {
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            width: 320px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .node-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        /* 헤더 디자인 */
+        .node-header {
+            padding: 16px 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            background-color: #f8fafc;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .node-header .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+        }
+        .node-header .arrow {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            transition: transform 0.3s;
+        }
+        
+        /* 🔓 활성화(열림) 상태 스타일 */
+        .node-box.active {
+            border-color: var(--accent);
+        }
+        .node-box.active .node-header {
+            background-color: #f0fdfa;
+        }
+        .node-box.active .arrow {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+        
+        /* 🔽 풀다운 확장 애니메이션 영역 */
+        .node-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            border-radius: 0 0 8px 8px;
+        }
+        .node-box.active .node-body {
+            max-height: 400px; /* 구절이 길어도 잘리지 않도록 넉넉하게 설정 */
+        }
+        .node-content {
+            padding: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #475569;
+            border-top: 1px solid #edf2f7;
+        }
+        
+        /* ✝️ 성경 구절 카드 디자인 */
+        .verse-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--accent);
+            padding: 12px 15px;
+            margin-top: 12px;
             font-style: italic;
+            font-size: 0.9rem;
+            border-radius: 0 6px 6px 0;
+            color: #16a34a;
         }
         .verse-ref {
             display: block;
             text-align: right;
             font-weight: bold;
-            color: var(--primary-color);
-            margin-top: 5px;
             font-style: normal;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            color: #15803d;
+            margin-top: 6px;
         }
 
-        /* 인터랙티브 진단 도구 스타일 */
-        .quiz-container {
-            background: #fdfefe;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 25px 20px;
-            text-align: center;
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .quiz-container p {
-            margin-top: 0;
-        }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        @media (min-width: 576px) {
-            .btn-group {
-                flex-direction: row;
-                justify-content: center;
+        /* 테두리 포인트 컬러 분기 코드 */
+        .border-trust { border-color: var(--trust-color); }
+        .border-trust .node-header { background-color: #f0f9ff; }
+        .border-action { border-color: var(--e67e22); }
+        .border-action .node-header { background-color: #fff7ed; }
+
+        /* 📱 모바일 화면 최적화 (가로 폭이 좁아지면 깔끔하게 세로 배향으로 자동 전홥됩니다) */
+        @media (max-width: 1024px) {
+            .tree, .tree ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
             }
-        }
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            flex: 1;
-        }
-        .btn:hover {
-            background-color: #1a252f;
-        }
-        .btn-accent {
-            background-color: var(--accent-color);
-        }
-        .btn-accent:hover {
-            background-color: #128f76;
-        }
-        .hidden {
-            display: none;
-        }
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-            color: #bdc3c7;
-            font-size: 0.9rem;
+            .tree ul { margin-top: 20px; }
+            .tree ul::before, .tree li::before, .tree li::after {
+                display: none; /* 세로형태일 때는 선을 숨겨 깔끔하게 처리 */
+            }
+            .node-box {
+                width: 90vw;
+                max-width: 450px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>✝️ 성경적 염려 대처 가이드</h1>
-        <p>기도로 시작하여 말씀으로 생각과 행동을 분별하는 통합 트리</p>
-    </header>
+<header>
+    <h1>✝️ 성경적 염려 대처 전체 마인드맵</h1>
+    <p>전체 구조를 한눈에 보며, 각 분기점 상자를 클릭하면 말씀과 지침이 아래로 열립니다.</p>
+</header>
 
-    <!-- 와이드 메인 레이아웃 시작 -->
-    <div class="main-layout">
-        
-        <!-- 왼쪽 패널: 대형 트리 다이어그램 (넓은 화면을 꽉 채움) -->
-        <div class="section">
-            <h2>📊 통합 염려 대처 트리 (Decision Tree)</h2>
-            <div class="mermaid-box">
-                <div class="mermaid">
-                    graph TD
-                        A([시작: 염려와 걱정이 밀려올 때]) --> B["[1단계 기도] 무릎 꿇고 기도하며<br>이 염려의 실체를 직면하기<br>(빌 4:6-7)"]
-                        
-                        B --> C{2. 말씀의 분별:<br>내가 바꿀 수 없는 영역<br>(주권)인가, 순종의 영역인가?}
-                        
-                        C -- "하나님의 주권 영역<br>(가상 불안/과거/미래/타인)" --> D[3-A. 온전한 신뢰 & 기도로 맡기기]
-                        D --> D1["• 세상 두려움 끊기 (딤후 1:7)<br>• 주님께 짐 넘기기 (벧전 5:7)<br>• 내일 일은 내일 (마 6:34)"]
-                        
-                        C -- "지혜와 순종의 영역<br>(현실 문제/맡겨진 사명)" --> E{3-B. 주님이 오늘 내게<br>요구하시는 구체적인<br>순종이 있는가?}
-                        
-                        E -- 아니오 (지혜를 구하며 대기) --> F[잠잠히 기도하며 평강 구하기]
-                        E -- 예 (행동이 필요한 때) --> G[믿음의 행동 즉시 실행]
-                        
-                        F --> H1["• 하나님의 때를 기다리기<br>• 선하심을 신뢰하기 (롬 8:28)"]
-                        G --> G1["• 계획 세우기 (잠 16:9)<br>• 담대히 첫 발 내딛기 (수 1:9)"]
-                        
-                        D1 --> Z([종료: 주님이 주시는 평강 도달])
-                        H1 --> Z
-                        G1 --> Z
-                </div>
-            </div>
-        </div>
-
-        <!-- 오른쪽 패널: 모바일에서는 아래로 가고, PC에서는 우측 상단에 고정됨 -->
-        <div class="sticky-aside">
-            <!-- 실시간 진단 도구 -->
-            <div class="section" style="margin-bottom: 30px;">
-                <h2>🛠️ 실시간 염려 분별 가이드</h2>
-                <div class="quiz-container">
-                    <!-- 질문 1 -->
-                    <div id="q1">
-                        <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-color);">[1단계 기도] 먼저 감정의 소음을 가라앉히고 하나님 앞에 이 걱정을 올려드린 후, 아래 버튼을 눌러 분별을 시작하세요.</p>
-                        <div class="btn-group">
-                            <button class="btn btn-accent" onclick="nextStep('q1', 'q2')">기도했습니다 (분별 시작)</button>
-                        </div>
+<div class="tree-wrapper">
+    <div class="tree">
+        <ul>
+            <!-- [1단계 루트 노드: 기도] -->
+            <li>
+                <div class="node-box" onclick="toggleNode(this)">
+                    <div class="node-header">
+                        <span>🙏 1단계: 무릎 꿇고 기도하기</span>
+                        <span class="badge">START</span>
+                        <span class="arrow">▼</span>
                     </div>
-
-                    <!-- 질문 2 -->
-                    <div id="q2" class="hidden">
-                        <p style="font-size: 1.15rem; font-weight: bold;">Q2. 지금 하는 걱정이 내가 힘써서 바꿀 수 없는 영역(과거, 미래, 타인의 마음)인가요, 아니면 오늘 감당해야 할 일인가요?</p>
-                        <div class="btn-group">
-                            <button class="btn" onclick="nextStep('q2', 'result-trust')">내가 바꿀 수 없는 영역(주권)이다</button>
-                            <button class="btn btn-accent" onclick="nextStep('q2', 'q3')">오늘 감당해야 할 현실적인 일이다</button>
+                    <div class="node-body">
+                        <div class="node-content">
+                            염려가 습격해올 때 내 생각으로 시나리오를 이어가지 마십시오. 먼저 감정의 소음을 차단하고 주님 앞에 무릎 꿇고 이 염려를 직면합니다.
+                            <div class="verse-box">
+                                "아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라"
+                                <span class="verse-ref">빌립보서 4:6</span>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- 질문 3 -->
-                    <div id="q3" class="hidden">
-                        <p style="font-size: 1.15rem; font-weight: bold;">Q3. 이 문제에 대해 주님이 오늘 내게 요구하시는 구체적인 행동이나 순종이 명확히 떠오르나요?</p>
-                        <div class="btn-group">
-                            <button class="btn btn-accent" onclick="nextStep('q3', 'result-action')">예, 제가 행동해야 할 영역이 있습니다</button>
-                            <button class="btn" onclick="nextStep('q3', 'result-wait')">아니오, 지혜를 구하며 기다려야 합니다</button>
-                        </div>
-                    </div>
-
-                    <!-- 결과: 주권 인정 -->
-                    <div id="result-trust" class="hidden">
-                        <h3>🙏 처방: 주권 인정 & 기도로 맡기기</h3>
-                        <p>내가 쥐고 흔들 수 없는 영역입니다. 걱정이라는 짐을 기도로 하나님 손에 완전히 패스하세요.</p>
-                        <div class="verse-card">
-                            "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
-                            <span class="verse-ref">베드로전서 5:7</span>
-                        </div>
-                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
-                    </div>
-
-                    <!-- 결과: 대기/평강 -->
-                    <div id="result-wait" class="hidden">
-                        <h3>⏳ 처방: 잠잠히 기도하며 평강 구하기</h3>
-                        <p>섣부른 인간의 조급함을 내려놓고, 하나님의 선하신 타이밍을 신뢰하며 잠잠히 평강을 구하세요.</p>
-                        <div class="verse-card">
-                            "우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라"
-                            <span class="verse-ref">로마서 8:28</span>
-                        </div>
-                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
-                    </div>
-
-                    <!-- 결과: 행동 실행 -->
-                    <div id="result-action" class="hidden">
-                        <h3>🏃 처방: 믿음의 행동 즉시 실행 (Action)</h3>
-                        <p>두려움에 멈춰 서지 마세요. 오늘 당장 실행할 수 있는 가장 작은 첫걸음을 주님 의지하며 내딛으십시오.</p>
-                        <div class="verse-card">
-                            "강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라"
-                            <span class="verse-ref">여호수아 1:9</span>
-                        </div>
-                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
                     </div>
                 </div>
-            </div>
 
-            <!-- 하단 텍스트 지침 영역 -->
-            <div class="section">
-                <h2>📋 와이드 스크린 활용 지침</h2>
-                <p style="font-size: 0.95rem; margin-bottom: 0;">왼쪽의 <strong>통합 대형 트리 다이어그램</strong>을 보며 전체 지도를 머릿속에 그리세요. 염려가 찾아올 때마다 오른쪽의 <strong>실시간 분별기</strong>를 클릭해가며 생각을 정돈할 수 있습니다.</p>
-            </div>
-        </div>
-    </div> <!-- .main-layout 끝 -->
+                <!-- 자식 노드 그룹 시작 -->
+                <ul>
+                    <!-- [2-A단계 분기: 하나님의 주권 영역] -->
+                    <li>
+                        <div class="node-box border-trust" onclick="toggleNode(this)">
+                            <div class="node-header">
+                                <span>☁️ 2-A. 하나님의 주권 영역</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="node-body">
+                                <div class="node-content">
+                                    내가 통제할 수 없고 바꿀 수도 없는 영역(지나간 과거, 아직 오지 않은 내일 일, 타인의 감정과 마음, 막연한 가상불안)입니다.
+                                    <div class="verse-box">
+                                        "너희 중에 누가 염려함으로 그 키를 한 자라도 더할 수 있느냐"
+                                        <span class="verse-ref">마태복음 6:27</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 3단계 결과 노드 -->
+                        <ul>
+                            <li>
+                                <div class="node-box active" style="cursor: default;">
+                                    <div class="node-header" style="background-color: #e0f2fe;">
+                                        <span style="color: var(--trust-color);">🤝 최종처방: 온전한 신뢰와 위탁</span>
+                                    </div>
+                                    <div class="node-content">
+                                        염려의 주인 자리를 주님께 온전히 이양하십시오. "내 영역이 아닙니다"라고 선포하고 생각을 의도적으로 끊어냅니다.
+                                        <div class="verse-box" style="background:#f0f9ff; border-left-color: var(--trust-color); color: #0369a1;">
+                                            "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
+                                            <span class="verse-ref" style="color:#0369a1;">베드로전서 5:7</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
 
-    <footer>
-        <p>© 2026 성경적 염려 대처 가이드라인. 모든 마음의 평안을 기원합니다.</p>
-    </footer>
-</div> <!-- .container 끝 -->
+                    <!-- [2-B단계 분기: 지혜와 순종의 영역] -->
+                    <li>
+                        <div class="node-box border-action" onclick="toggleNode(this)">
 
-<!-- 인터랙티브 화면 전환을 위한 자바스크립트 기능 -->
+                            <div class="node-header">
+                                <span>🛠️ 2-B. 지혜와 순종의 영역</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="node-body">
+                                <div class="node-content">
+                                    오늘 나에게 주어진 마감 기한, 건강 돌보기, 맡겨진 책임 등 내가 이성적인 지혜를 발휘하여 움직여 해결할 수 있는 생산적인 영역입니다.
+                                    <div class="verse-box" style="color: #c2410c; background: #fff7ed; border-left-color: #e67e22;">
+                                        "지혜가 제일이니 지혜를 얻으라 네가 얻은 모든 것을 가지고 명철을 얻을지니라"
+                                        <span class="verse-ref" style="color: #c2410c;">잠언 4:7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul>
+                            <li>
+                                <div class="node-box active" style="cursor: default;">
+                                    <div class="node-header" style="background-color: #ffedd5;">
+                                        <span style="color: var(--action-color);">🏃 최종처방: 믿음의 순종과 실행</span>
+                                    </div>
+                                    <div class="node-content">
+                                        문제가 너무 거대해 보이면 무기력해집니다. 계획을 세우되 오늘 당장 5분 안에 할 수 있는 가장 작고 구체적인 순종 한 걸음을 즉시 딛으십시오.
+                                        <div class="verse-box" style="background:#fff7ed; border-left-color: var(--action-color); color: #c2410c;">
+                                            "강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라"
+                                            <span class="verse-ref" style="color: #c2410c;">여호수아 1:9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
 <script>
-    function nextStep(currentId, nextId) {
-        document.getElementById(currentId).classList.add('hidden');
-        document.getElementById(nextId).classList.remove('hidden');
-    }
-
-    function resetQuiz() {
-        document.getElementById('q2').classList.add('hidden');
-        document.getElementById('q3').classList.add('hidden');
-        document.getElementById('result-trust').classList.add('hidden');
-        document.getElementById('result-wait').classList.add('hidden');
-        document.getElementById('result-action').classList.add('hidden');
-        document.getElementById('q1').classList.remove('hidden');
+    // 클릭하면 아코디언처럼 아래로 슥 열리는 풀다운 기능 함수
+    function toggleNode(boxElement) {
+        boxElement.classList.toggle('active');
     }
 </script>
 </body>
 </html>
+                        
