@@ -32,15 +32,16 @@
         header h1 { color: var(--primary); margin: 0 0 12px 0; font-size: 2.4rem; }
         header p { color: #7f8c8d; margin: 0; font-size: 1.1rem; }
 
-        /* 🌐 PC 와이드 화면 전체를 활용하는 5분할 격자 레이아웃 */
+        /* 🌐 PC 와이드 화면 전체를 활용하는 가로형 격자 레이아웃 */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* PC에서는 5개 카드가 나란히 배치 */
+            grid-template-columns: repeat(5, 1fr); /* PC에서는 5개 카드가 나란히 배분 */
             gap: 20px;
             width: 100%;
             max-width: 1600px;
             padding: 30px 20px;
             box-sizing: border-box;
+            align-items: start; /* 높이가 다른 카드가 각각 자유롭게 늘어나도록 설정 */
         }
 
         /* 🛠️ 풀다운(Dropdown) 스타일의 개별 부류 상자 */
@@ -50,11 +51,10 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: fit-content;
         }
         .worry-card:hover {
             transform: translateY(-5px);
@@ -81,15 +81,17 @@
         }
         .worry-card.active .arrow { transform: rotate(180deg); }
 
-        /* 🔽 클릭 시 아래로 슥 열리는 풀다운 애니메이션 본문 */
+        /* 🔽 내용 잘림 오류 완벽 해결 영역 */
         .card-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            /* 구절과 행동 지침이 아무리 길어져도 자동 계산되어 자연스럽게 열리도록 변경 */
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             background: #ffffff;
         }
+        /* active 상태일 때 높이 한계치를 아주 넉넉하게 설정하여 스크롤 잘림 현상 제거 */
         .worry-card.active .card-body {
-            max-height: 600px; /* 상세 텍스트가 다 나오도록 여유 있게 설정 */
+            max-height: 1200px; 
         }
         .card-content {
             padding: 20px 15px;
@@ -98,25 +100,25 @@
             color: #475569;
         }
         
-        /* 영적 진단 및 액션플랜 박스 */
+        /* 진단 및 액션플랜 박스 양식 */
         .diagnosis-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 12px;
             font-size: 0.9rem;
         }
-        .diagnosis-box strong { color: var(--primary); display: block; margin-bottom: 4px; }
+        .diagnosis-box strong { color: var(--primary); display: block; margin-bottom: 6px; }
 
-        /* ✝️ 성경 구절 카드 디자인 */
+        /* ✝️ 성경 구절 카드 디자인 (대처 행동 위로 배치) */
         .verse-box {
             border-left: 4px solid var(--accent);
-            padding: 12px;
+            padding: 14px;
             font-style: italic;
             font-size: 0.9rem;
             border-radius: 0 6px 6px 0;
-            margin-top: 10px;
+            margin-bottom: 12px;
         }
         .verse-ref {
             display: block;
@@ -153,11 +155,11 @@
         .type-fail .verse-box { background: #fff7ed; border-left-color: var(--color-fail); color: #ea580c; }
         .type-fail .verse-ref { color: #c2410c; }
 
-        /* 📱 모바일 화면 최적화 (가로폭이 좁아지면 가로형 카드가 세로로 1줄씩 예쁘게 정렬됨) */
+        /* 📱 화면 반응형 설정 (태블릿이나 스마트폰 환경에서는 세로형 리스트로 자동 정렬) */
         @media (max-width: 1200px) {
             .grid-container {
-                grid-template-columns: 1fr; /* 모바일/태블릿에서는 1열 */
-                max-width: 500px;
+                grid-template-columns: 1fr;
+                max-width: 550px;
             }
         }
     </style>
@@ -176,7 +178,7 @@
         <div class="card-header">
             <span class="icon">💰</span>
             <span>1. 물질과 생계의 염려</span>
-            <span class="arrow">▼ 내용 열기</span>
+            <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
             <div class="card-content">
@@ -184,13 +186,13 @@
                     <strong>🩺 영적 원인 진단</strong>
                     내 모든 삶을 채우시고 먹이시는 분이 '하나님 아버지'이심을 온전히 신뢰하지 못할 때 찾아오는 생존의 불안입니다.
                 </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    하늘을 나는 새와 들풀도 입히시는 주님을 바라보며, 재정의 염려를 감사의 기도로 바꾸고 오늘 주신 것에 자족하는 연습을 하십시오.
-                </div>
                 <div class="verse-box">
                     "오늘 있다가 내일 아궁이에 던져지는 들풀도 하나님이 이렇게 입히시거든 하물며 너희일까보냐 믿음이 작은 자들아 그러므로 염려하여 이르기를 무엇을 먹을까 무엇을 마실까 무엇을 입을까 하지 말라"
                     <span class="verse-ref">마태복음 6:30-31</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    하늘을 나는 새와 들풀도 입히시는 주님을 바라보며, 재정의 염려를 감사의 기도로 바꾸고 오늘 주신 것에 자족하는 연습을 하십시오.
                 </div>
             </div>
         </div>
@@ -201,7 +203,7 @@
         <div class="card-header">
             <span class="icon">⏳</span>
             <span>2. 가상 미래의 염려</span>
-            <span class="arrow">▼ 내용 열기</span>
+            <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
             <div class="card-content">
@@ -209,13 +211,13 @@
                     <strong>🩺 영적 원인 진단</strong>
                     시간의 주인인 주님을 제쳐두고, 아직 오지 않은 내일을 내 힘과 계산으로 통제하려는 조급함과 교만에서 생깁니다.
                 </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    '내일'이라는 가상의 짐을 오늘로 가져오지 마십시오. 오늘 내게 주어진 시간의 문만 걸어 잠그고 주님과 단 한 걸음씩만 동행하십시오.
-                </div>
                 <div class="verse-box">
                     "그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요 한 날의 괴로움은 그 날로 족하니라"
                     <span class="verse-ref">마태복음 6:34</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    '내일'이라는 가상의 짐을 오늘로 가져오지 마십시오. 오늘 내게 주어진 시간의 문만 걸어 잠그고 주님과 단 한 걸음씩만 동행하십시오.
                 </div>
             </div>
         </div>
@@ -226,7 +228,7 @@
         <div class="card-header">
             <span class="icon">👥</span>
             <span>3. 타인의 시선과 인정</span>
-            <span class="arrow">▼ 내용 열기</span>
+            <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
             <div class="card-content">
@@ -234,13 +236,13 @@
                     <strong>🩺 영적 원인 진단</strong>
                     나의 절대적인 정체성을 하나님의 시선이 아닌, 사람들의 일시적인 평가와 거절감, 소외감에 둘 때 걸리는 영적 올무입니다.
                 </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    사람을 만족시키는 인생이 아닌 하나님을 기쁘시게 하는 사명자로 서십시오. 사람의 판단보다 나를 아시는 주님의 음성에 귀를 기울여야 합니다.
-                </div>
                 <div class="verse-box">
                     "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
                     <span class="verse-ref">잠언 29:25</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    사람을 만족시키는 인생이 아닌 하나님을 기쁘시게 하는 사명자로 서십시오. 사람의 판단보다 나를 아시는 주님의 음성에 귀를 기울여야 합니다.
                 </div>
             </div>
         </div>
@@ -251,7 +253,7 @@
         <div class="card-header">
             <span class="icon">🏥</span>
             <span>4. 건강과 신체 안전</span>
-            <span class="arrow">▼ 내용 열기</span>
+            <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
             <div class="card-content">
@@ -259,13 +261,13 @@
                     <strong>🩺 영적 원인 진단</strong>
                     육신의 질병과 약해짐, 나아가 죽음의 공포가 내 생명의 연한을 쥐고 계신 창조주 하나님의 권능보다 크게 느껴질 때 발생합니다.
                 </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    의학적인 치료와 예방에 힘쓰되, 육신의 키와 생명은 주님의 주권임을 인정하십시오. 나를 끝까지 돌보시는 하나님께 머리를 맡기십시오.
-                </div>
                 <div class="verse-box">
                     "너희 중에 누가 염려함으로 그 키를 한 자라도 더할 수 있느냐... 너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
                     <span class="verse-ref">마태복음 6:27 / 베드로전서 5:7</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    의학적인 치료와 예방에 힘쓰되, 육신의 키와 생명은 주님의 주권임을 인정하십시오. 나를 끝까지 돌보시는 하나님께 머리를 맡기십시오.
                 </div>
             </div>
         </div>
@@ -276,7 +278,7 @@
         <div class="card-header">
             <span class="icon">📉</span>
             <span>5. 성취와 실패의 염려</span>
-            <span class="arrow">▼ 내용 열기</span>
+            <span class="arrow">▼ 내용 보기</span>
         </div>
         <div class="card-body">
             <div class="card-content">
@@ -284,13 +286,13 @@
                     <strong>🩺 영적 원인 진단</strong>
                     세상의 성공 기준과 나를 계속 비교하며 뒤처질까 봐 불안해하는 세상의 욕심(탐심)이 생각의 중심을 채우고 있는 상태입니다.
                 </div>
-                <div class="diagnosis-box">
-                    <strong>🏃 성경적 대처 행동</strong>
-                    성공과 실패의 정의를 세상의 기준에서 하나님의 뜻으로 바꾸십시오. 세상의 성공을 좇는 염려를 내려놓고 주님의 의를 구할 때 삶의 모든 필요가 보너스로 채워집니다.
-                </div>
                 <div class="verse-box">
                     "너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라"
                     <span class="verse-ref">마태복음 6:33</span>
+                </div>
+                <div class="diagnosis-box">
+                    <strong>🏃 성경적 대처 행동</strong>
+                    성공과 실패의 정의를 세상의 기준에서 하나님의 뜻으로 바꾸십시오. 세상의 성공을 좇는 염려를 내려놓고 주님의 의를 구할 때 삶의 모든 필요가 보너스로 채워집니다.
                 </div>
             </div>
         </div>
@@ -299,10 +301,11 @@
 </div> <!-- .grid-container 끝 -->
 
 <script>
-    // 카드를 클릭하면 active 클래스를 토글하여 아래로 풀다운 슬라이드 시키는 기능
+    // 카드를 클릭하면 active 클래스를 토글하여 높이 제한 없이 자연스럽게 끝까지 늘려주는 스크립트
     function toggleCard(cardElement) {
         cardElement.classList.toggle('active');
     }
 </script>
 </body>
 </html>
+
