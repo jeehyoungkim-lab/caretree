@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>성경적 염려 대처 통합 트리 가이드라인</title>
+    <title>성경적 염려 대처 심층 분기 트리</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -16,268 +16,168 @@
         }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
         }
         header {
-            text-align: center;
-            padding: 40px 20px 20px 20px;
-            width: 100%;
-            max-width: 1200px;
-            box-sizing: border-box;
+            text-align: center; padding: 40px 20px 10px 20px;
+            width: 100%; max-width: 1200px; box-sizing: border-box;
         }
-        header h1 {
-            color: var(--primary);
-            margin: 0 0 10px 0;
-            font-size: 2.4rem;
-        }
-        header p {
-            color: #7f8c8d;
-            margin: 0;
-            font-size: 1.1rem;
-        }
+        header h1 { color: var(--primary); margin: 0 0 10px 0; font-size: 2.2rem; }
+        header p { color: #7f8c8d; margin: 0; font-size: 1.1rem; }
 
-        /* 🌐 PC 와이드 화면 전체를 사용하는 가로형 트리 컨테이너 */
         .tree-wrapper {
-            width: 100%;
-            max-width: 1400px;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            overflow-x: auto; /* 화면이 아주 작아지면 가로 스크롤 제공 */
+            width: 100%; max-width: 1400px; padding: 30px 20px;
+            box-sizing: border-box; overflow-x: auto;
         }
+        .tree, .tree ul, .tree li { list-style: none; margin: 0; padding: 0; position: relative; }
+        .tree { display: flex; justify-content: center; }
+        .tree ul { display: flex; justify-content: center; gap: 60px; margin-top: 50px; }
+        .tree li { display: flex; flex-direction: column; align-items: center; position: relative; }
 
-        /* CSS 트리 구조 레이아웃 정의 */
-        .tree, .tree ul, .tree li {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
-        .tree {
-            display: flex;
-            justify-content: center;
-        }
-        .tree ul {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 40px; /* 위아래 노드 간격 */
-        }
-        .tree li {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* 📐 순수 CSS로 그리는 완벽한 연결선 (트리의 뼈대) */
-        /* 상단 세로선 */
+        /* 가로세로 연결선 */
         .tree ul::before {
-            content: '';
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            width: 2px;
-            height: 40px;
-            background: var(--line-color);
+            content: ''; position: absolute; top: -50px; left: 50%;
+            width: 2px; height: 50px; background: var(--line-color);
         }
-        /* 자식들을 잇는 가로선 */
         .tree li::before, .tree li::after {
-            content: '';
-            position: absolute;
-            top: -40px;
-            width: 50%;
-            height: 2px;
-            background: var(--line-color);
+            content: ''; position: absolute; top: -50px;
+            width: 50%; height: 2px; background: var(--line-color);
         }
         .tree li::before { left: 50%; }
         .tree li::after { right: 50%; }
-        /* 단일 자식이거나 양 끝 자식의 선 정리 */
-        .tree li:first-child::before { display: none; }
-        .tree li:last-child::after { display: none; }
-        .tree li:only-child::before, .tree li:only-child::after { display: none; }
+        .tree li:first-child::before, .tree li:last-child::after { display: none; }
 
-        /* 🛠️ 풀다운(Dropdown) 폴더 스타일의 상자 패널 */
+        /* 선 위 뱃지 */
+        .badge-line {
+            position: absolute; top: -38px; z-index: 15;
+            font-size: 0.8rem; font-weight: bold; padding: 3px 10px;
+            border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .badge-no { background: #fee2e2; color: #ef4444; left: 15%; }
+        .badge-yes { background: #dcfce7; color: #22c55e; right: 15%; }
+
+        /* 노드 박스 양식 */
         .node-box {
-            background: #ffffff;
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            width: 320px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
+            background: #ffffff; border: 2px solid var(--primary); border-radius: 10px;
+            width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            cursor: pointer; z-index: 10; transition: all 0.2s ease; box-sizing: border-box;
         }
-        .node-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        }
-        
-        /* 헤더 디자인 */
+        .node-box:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
         .node-header {
-            padding: 16px 20px;
-            font-weight: bold;
-            font-size: 1.05rem;
-            background-color: #f8fafc;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 16px 20px; font-weight: bold; font-size: 1.05rem;
+            background-color: #f8fafc; border-radius: 8px 8px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #e2e8f0;
         }
-        .node-header .badge {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            background: var(--primary);
-            color: white;
-            border-radius: 5px;
-        }
-        .node-header .arrow {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            transition: transform 0.3s;
-        }
+        .node-header .arrow { font-size: 0.8rem; color: #94a3b8; transition: transform 0.3s; }
+        .node-box.active .arrow { transform: rotate(180deg); color: var(--accent); }
         
-        /* 🔓 활성화(열림) 상태 스타일 */
-        .node-box.active {
-            border-color: var(--accent);
-        }
-        .node-box.active .node-header {
-            background-color: #f0fdfa;
-        }
-        .node-box.active .arrow {
-            transform: rotate(180deg);
-            color: var(--accent);
-        }
-        
-        /* 🔽 풀다운 확장 애니메이션 영역 */
         .node-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #ffffff;
-            border-radius: 0 0 8px 8px;
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff; border-radius: 0 0 8px 8px;
         }
-        .node-box.active .node-body {
-            max-height: 400px; /* 구절이 길어도 잘리지 않도록 넉넉하게 설정 */
-        }
-        .node-content {
-            padding: 20px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #475569;
-            border-top: 1px solid #edf2f7;
-        }
+        .node-box.active .node-body { max-height: 500px; }
+        .node-content { padding: 20px; font-size: 0.95rem; line-height: 1.6; color: #475569; }
         
-        /* ✝️ 성경 구절 카드 디자인 */
+        /* 내장형 체크리스트 스타일 */
+        .checklist {
+            background: #f1f5f9; padding: 12px; border-radius: 8px; margin: 10px 0;
+        }
+        .checklist-item {
+            display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 0.9rem;
+        }
+        .checklist-item:last-child { margin-bottom: 0; }
+        .checklist-item input { margin-top: 4px; }
+
         .verse-box {
-            background: #f0fdf4;
-            border-left: 4px solid var(--accent);
-            padding: 12px 15px;
-            margin-top: 12px;
-            font-style: italic;
-            font-size: 0.9rem;
-            border-radius: 0 6px 6px 0;
-            color: #16a34a;
+            background: #f0fdf4; border-left: 4px solid var(--accent);
+            padding: 12px 15px; margin-top: 12px; font-style: italic;
+            font-size: 0.9rem; border-radius: 0 6px 6px 0; color: #16a34a;
         }
-        .verse-ref {
-            display: block;
-            text-align: right;
-            font-weight: bold;
-            font-style: normal;
-            font-size: 0.8rem;
-            color: #15803d;
-            margin-top: 6px;
-        }
+        .verse-ref { display: block; text-align: right; font-weight: bold; font-style: normal; font-size: 0.8rem; color: #15803d; margin-top: 6px; }
 
-        /* 테두리 포인트 컬러 분기 코드 */
         .border-trust { border-color: var(--trust-color); }
-        .border-trust .node-header { background-color: #f0f9ff; }
-        .border-action { border-color: var(--e67e22); }
-        .border-action .node-header { background-color: #fff7ed; }
+        .border-action { border-color: var(--action-color); }
 
-        /* 📱 모바일 화면 최적화 (가로 폭이 좁아지면 깔끔하게 세로 배향으로 자동 전홥됩니다) */
         @media (max-width: 1024px) {
-            .tree, .tree ul {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-            }
-            .tree ul { margin-top: 20px; }
-            .tree ul::before, .tree li::before, .tree li::after {
-                display: none; /* 세로형태일 때는 선을 숨겨 깔끔하게 처리 */
-            }
-            .node-box {
-                width: 90vw;
-                max-width: 450px;
-            }
+            .tree, .tree ul { flex-direction: column; align-items: center; gap: 30px; }
+            .tree ul { margin-top: 30px; }
+            .tree ul::before, .tree li::before, .tree li::after, .badge-line { display: none; }
+            .node-box { width: 95vw; max-width: 450px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>✝️ 성경적 염려 대처 전체 마인드맵</h1>
-    <p>전체 구조를 한눈에 보며, 각 분기점 상자를 클릭하면 말씀과 지침이 아래로 열립니다.</p>
+    <h1>✝️ 성경적 염려 대처 및 심층 진단 트리</h1>
+    <p>상자를 열어 체크리스트 질문에 답하며 내 마음에 가득 찬 염려의 실체를 조명해 보세요.</p>
 </header>
 
 <div class="tree-wrapper">
     <div class="tree">
         <ul>
-            <!-- [1단계 루트 노드: 기도] -->
+            <!-- [1단계 루트 노드] -->
             <li>
                 <div class="node-box" onclick="toggleNode(this)">
                     <div class="node-header">
                         <span>🙏 1단계: 무릎 꿇고 기도하기</span>
-                        <span class="badge">START</span>
                         <span class="arrow">▼</span>
                     </div>
                     <div class="node-body">
-                        <div class="node-content">
-                            염려가 습격해올 때 내 생각으로 시나리오를 이어가지 마십시오. 먼저 감정의 소음을 차단하고 주님 앞에 무릎 꿇고 이 염려를 직면합니다.
-                            <div class="verse-box">
-                                "아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라"
-                                <span class="verse-ref">빌립보서 4:6</span>
+                        <div class="node-content" onclick="event.stopPropagation();">
+                            먼저 하나님 앞에 엎드려 생각을 멈추고 질문을 통해 진단합니다.
+                            <div class="checklist">
+                                <div class="checklist-item">
+                                    <input type="checkbox" id="c1_1"> <label for="c1_1">아직 일어나지 않은 먼 미래의 가상 시나리오인가요?</label>
+                                </div>
+                                <div class="checklist-item">
+                                    <input type="checkbox" id="c1_2"> <label for="c1_2">내가 오늘 아무리 노력해도 스스로 바꿀 수 없는 영역인가요?</label>
+                                </div>
                             </div>
+                            <p style="font-size:0.85rem; color:#64748b; margin:0;">💡 위 질문 중 하나라도 체크된다면 <strong>왼쪽(주권 영역)</strong>으로, 오늘 즉시 감당할 일이라면 <strong>오른쪽(순종 영역)</strong>으로 가세요.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- 자식 노드 그룹 시작 -->
                 <ul>
-                    <!-- [2-A단계 분기: 하나님의 주권 영역] -->
+                    <!-- 왼쪽 분기: No (바꿀 수 없는 주권 영역) -->
                     <li>
+                        <span class="badge-line badge-no">통제 불가 (No)</span>
                         <div class="node-box border-trust" onclick="toggleNode(this)">
                             <div class="node-header">
-                                <span>☁️ 2-A. 하나님의 주권 영역</span>
+                                <span>☁️ 2-A. 하나님의 주권 영역 분별</span>
                                 <span class="arrow">▼</span>
                             </div>
                             <div class="node-body">
-                                <div class="node-content">
-                                    내가 통제할 수 없고 바꿀 수도 없는 영역(지나간 과거, 아직 오지 않은 내일 일, 타인의 감정과 마음, 막연한 가상불안)입니다.
+                                <div class="node-content" onclick="event.stopPropagation();">
+                                    내가 바꿀 수 없는 영역입니다. 심층 질문으로 마음을 비추어보세요.
+                                    <div class="checklist">
+                                        <div class="checklist-item">
+                                            <input type="checkbox" id="c2_1"> <label for="c2_1">사람들의 시선이나 평가 때문에 조급한가요?</label>
+                                        </div>
+                                        <div class="checklist-item">
+                                            <input type="checkbox" id="c2_2"> <label for="c2_2">하나님이 예전에 도우셨던 기억을 잊었나요?</label>
+                                        </div>
+                                    </div>
                                     <div class="verse-box">
-                                        "너희 중에 누가 염려함으로 그 키를 한 자라도 더할 수 있느냐"
-                                        <span class="verse-ref">마태복음 6:27</span>
+                                        "사람을 두려워하면 올무에 걸리게 되거니와 여호와를 의지하는 자는 안전하리라"
+                                        <span class="verse-ref">잠언 29:25</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- 3단계 결과 노드 -->
                         <ul>
                             <li>
-                                <div class="node-box active" style="cursor: default;">
+                                <div class="node-box active" style="cursor: default; border-color: var(--trust-color);">
                                     <div class="node-header" style="background-color: #e0f2fe;">
-                                        <span style="color: var(--trust-color);">🤝 최종처방: 온전한 신뢰와 위탁</span>
+                                        <span style="color: var(--trust-color);">🤝 처방: 에벤에셀 기억과 전적 위탁</span>
                                     </div>
                                     <div class="node-content">
-                                        염려의 주인 자리를 주님께 온전히 이양하십시오. "내 영역이 아닙니다"라고 선포하고 생각을 의도적으로 끊어냅니다.
+                                        "여기까지 도우신(에벤에셀) 하나님이 내일도 인도하신다"고 선포하며 짐을 넘기세요.
                                         <div class="verse-box" style="background:#f0f9ff; border-left-color: var(--trust-color); color: #0369a1;">
                                             "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
                                             <span class="verse-ref" style="color:#0369a1;">베드로전서 5:7</span>
@@ -288,35 +188,46 @@
                         </ul>
                     </li>
 
-                    <!-- [2-B단계 분기: 지혜와 순종의 영역] -->
+                    <!-- 오른쪽 분기: Yes (바꿀 수 있는 순종 영역) -->
                     <li>
+                        <span class="badge-line badge-yes">행동 가능 (Yes)</span>
                         <div class="node-box border-action" onclick="toggleNode(this)">
-
                             <div class="node-header">
-                                <span>🛠️ 2-B. 지혜와 순종의 영역</span>
+                                <span>🛠️ 2-B. 지혜와 순종의 영역 분별</span>
                                 <span class="arrow">▼</span>
                             </div>
                             <div class="node-body">
-                                <div class="node-content">
-                                    오늘 나에게 주어진 마감 기한, 건강 돌보기, 맡겨진 책임 등 내가 이성적인 지혜를 발휘하여 움직여 해결할 수 있는 생산적인 영역입니다.
+                                <div class="node-content" onclick="event.stopPropagation();">
+                                    오늘 나에게 주어진 마감, 책임 등 행동해야 할 영역입니다.
+                                    <div class="checklist">
+
+
+
+
+                                        <div class="checklist-item">
+                                            <input type="checkbox" id="c3_1"> <label for="c3_1">이 걱정의 동기가 단순한 욕심이나 비교의식인가요?</label>
+                                        </div>
+                                        <div class="checklist-item">
+                                            <input type="checkbox" id="c3_2"> <label for="c3_2">주님이 오늘 당장 내게 요구하시는 행동이 명확한가요?</label>
+                                        </div>
+                                    </div>
                                     <div class="verse-box" style="color: #c2410c; background: #fff7ed; border-left-color: #e67e22;">
-                                        "지혜가 제일이니 지혜를 얻으라 네가 얻은 모든 것을 가지고 명철을 얻을지니라"
-                                        <span class="verse-ref" style="color: #c2410c;">잠언 4:7</span>
+                                        "너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라"
+                                        <span class="verse-ref" style="color: #c2410c;">마태복음 6:33</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <ul>
                             <li>
-                                <div class="node-box active" style="cursor: default;">
+                                <div class="node-box active" style="cursor: default; border-color: var(--action-color);">
                                     <div class="node-header" style="background-color: #ffedd5;">
-                                        <span style="color: var(--action-color);">🏃 최종처방: 믿음의 순종과 실행</span>
+                                        <span style="color: var(--action-color);">🏃 처방: 동기 정결케 하기 및 즉시 순종</span>
                                     </div>
                                     <div class="node-content">
-                                        문제가 너무 거대해 보이면 무기력해집니다. 계획을 세우되 오늘 당장 5분 안에 할 수 있는 가장 작고 구체적인 순종 한 걸음을 즉시 딛으십시오.
+                                        욕심은 회개하여 비워내고, 주님이 주신 건강한 사명이라면 오늘 할 수 있는 가장 작은 일부터 즉시 실행하십시오.
                                         <div class="verse-box" style="background:#fff7ed; border-left-color: var(--action-color); color: #c2410c;">
-                                            "강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라"
+                                            "강하고 담대하라 두려워하지 말며 놀라지 말라..."
                                             <span class="verse-ref" style="color: #c2410c;">여호수아 1:9</span>
                                         </div>
                                     </div>
@@ -332,11 +243,10 @@
 </div>
 
 <script>
-    // 클릭하면 아코디언처럼 아래로 슥 열리는 풀다운 기능 함수
     function toggleNode(boxElement) {
         boxElement.classList.toggle('active');
     }
 </script>
 </body>
 </html>
-                        
+                                        
