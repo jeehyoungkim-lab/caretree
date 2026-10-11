@@ -23,16 +23,19 @@
             margin: 0;
             padding: 0;
         }
+        
+        /* 전체 컨테이너: PC에서는 최대 1400px까지 넓게 활용 */
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
         }
+        
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             border-bottom: 2px solid #e9ecef;
-            padding-bottom: 30px;
+            padding-bottom: 20px;
         }
         header h1 {
             color: var(--primary-color);
@@ -43,27 +46,54 @@
             color: #7f8c8d;
             font-size: 1.1rem;
         }
+
+        /* 💡 반응형 핵심 레이아웃: PC에서는 가로 정렬, 모바일에서는 세로 정렬 */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr; /* 모바일 디폴트: 1열 */
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* 미디어 쿼리: PC 화면 (992px 이상) 일 때 와이드 스타일 적용 */
+        @media (min-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1.2fr 1fr; /* 좌우 1.2:1 비율로 배치 */
+            }
+            .sticky-aside {
+                position: sticky;
+                top: 20px; /* 스크롤할 때 오른쪽 패널이 화면에 고정됨 */
+            }
+        }
+
         .section {
             background: var(--card-bg);
             padding: 30px;
-            margin-bottom: 30px;
+            margin-bottom: 0; /* grid gap으로 조절 */
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
         .section h2 {
             color: var(--primary-color);
             border-left: 5px solid var(--accent-color);
             padding-left: 15px;
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
-        /* 트리 다이어그램 스타일 */
+
+        /* 트리 다이어그램 스타일: 넓은 화면에서 스크롤 없이 시원하게 표시 */
+        .mermaid-box {
+            overflow-x: auto;
+            padding: 10px 0;
+            background: #ffffff;
+            border-radius: 8px;
+        }
         .mermaid {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
-            overflow-x: auto;
         }
+
         /* 말씀 카드 스타일 */
         .verse-card {
             background-color: #f1f8f6;
@@ -82,24 +112,44 @@
             font-style: normal;
             font-size: 0.9rem;
         }
+
         /* 인터랙티브 진단 도구 스타일 */
         .quiz-container {
             background: #fdfefe;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .quiz-container p {
+            margin-top: 0;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        @media (min-width: 576px) {
+            .btn-group {
+                flex-direction: row;
+                justify-content: center;
+            }
         }
         .btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 24px;
-            margin: 10px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            font-size: 0.95rem;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s;
+            flex: 1;
         }
         .btn:hover {
             background-color: #1a252f;
@@ -115,7 +165,9 @@
         }
         footer {
             text-align: center;
-            margin-top: 5px;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
             color: #bdc3c7;
             font-size: 0.9rem;
         }
@@ -126,109 +178,121 @@
 <div class="container">
     <header>
         <h1>✝️ 성경적 염려 대처 가이드</h1>
-        <p>마음의 평안을 기억하고 주님의 방법으로 염려를 분별하는 결정 트리</p>
+        <p>기도로 시작하여 말씀으로 생각과 행동을 분별하는 통합 트리</p>
     </header>
 
-    <!-- 1. 트리 구조 시각화 영역 -->
-    <div class="section">
-        <h2>📊 염려 대처 결정 트리 (Decision Tree)</h2>
-        <div class="mermaid">
-            graph TD
-                A([시작: 염려와 걱정이 밀려올 때]) --> B{1. 말씀의 분별:<br>이 염려가 내가 지금 기도로<br>맡겨야 할 영역인가?}
-                
-                B -- "아니오 (막연한 불안 / 세상의 염려)" --> C[생각 내려놓기 & 평강 구하기]
-                C --> C1["• 아무것도 염려하지 말고 기도하기 (빌 4:6)<br>• 하나님의 선하심 신뢰하기 (롬 8:28)<br>• '오늘 괴로움은 오늘로 족하다' (마 6:34)"]
-                
-                B -- "예 (구체적이고 순종이 필요한 영역)" --> D{2. 주님이 내게 주신<br>통제 영역(지혜와 행동)인가?}
-                
-                D -- "아니오 (결과, 미래, 타인의 마음)" --> E[주권 인정 & 전적으로 맡기기]
-                E --> E1["• 너의 행사를 여호와께 맡기라 (잠 16:3)<br>• 염려를 다 주께 맡기기 (벧전 5:7)"]
-                
-                D -- "예 (내가 움직여야 할 순종)" --> F[믿음의 행동 실행]
-                F --> F1["• 주님이 주신 지혜로 계획하기 (잠 16:9)<br>• 작은 일에 충성하며 한 걸음 내딛기 (수 1:9)"]
-                
-                C1 --> G([종료: 주님이 주시는 평강 도달])
-                E1 --> G
-                F1 --> G
-        </div>
-    </div>
-
-    <!-- 2. 인터랙티브 진단 영역 -->
-    <div class="section">
-        <h2>정렬기 🛠️ 실시간 염려 분별 가이드</h2>
-        <div class="quiz-container">
-            <!-- 질문 1 -->
-            <div id="q1">
-                <p style="font-size: 1.2rem; font-weight: bold;">Q1. 지금 하는 걱정이 현실적이고 구체적인 문제인가요? 아니면 '어쩌지?' 하는 막연한 두려움인가요?</p>
-                <button class="btn" onclick="nextStep('q1', 'q2')">현실적이고 구체적인 일이다</button>
-                <button class="btn btn-accent" onclick="nextStep('q1', 'result-abstract')">막연한 불안 / 가상의 시나리오다</button>
-            </div>
-
-            <!-- 질문 2 -->
-            <div id="q2" class="hidden">
-                <p style="font-size: 1.2rem; font-weight: bold;">Q2. 그 문제의 결과나 과정을 내가 지금 당장 힘써서 바꾸거나 해결할 수 있나요?</p>
-                <button class="btn" onclick="nextStep('q2', 'result-action')">내가 행동해서 바꿀 수 있다 (순종의 영역)</button>
-                <button class="btn btn-accent" onclick="nextStep('q2', 'result-trust')">내 능력 밖의 일이다 (주권의 영역)</button>
-            </div>
-
-            <!-- 결과 1: 막연한 불안 -->
-            <div id="result-abstract" class="hidden">
-                <h3>💡 대처 처방: 생각 내려놓기 & 평강 구하기</h3>
-                <p>사탄이 주는 두려움과 조급함의 시나리오를 말씀으로 끊어내세요. 주님은 평강의 하나님이십니다.</p>
-                <div class="verse-card">
-                    "하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 절제하는 마음이니"
-                    <span class="verse-ref">디모데후서 1:7</span>
-                </div>
-                <button class="btn" onclick="resetQuiz()">다시 진단하기</button>
-            </div>
-
-            <!-- 결과 2: 통제 불가능한 영역 -->
-            <div id="result-trust" class="hidden">
-                <h3>🙏 대처 처방: 주권 인정 & 전적으로 맡기기</h3>
-                <p>결과와 미래, 타인의 마음은 하나님의 영역입니다. 기도로 기도의 제목을 완전히 주님께 넘기세요.</p>
-                <div class="verse-card">
-                    "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
-                    <span class="verse-ref">베드로전서 5:7</span>
-                </div>
-                <button class="btn" onclick="resetQuiz()">다시 진단하기</button>
-            </div>
-
-            <!-- 결과 3: 행동/순종의 영역 -->
-            <div id="result-action" class="hidden">
-                <h3>🏃 대처 처방: 믿음의 행동 실행 (Action)</h3>
-                <p>문제를 아주 작게 쪼개어, 지금 당장 5분 안에 할 수 있는 작은 일부터 주님을 의지하며 담대히 행하세요.</p>
-                <div class="verse-card">
-                    "내가 네게 명령한 것이 아니냐 강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라"
-                    <span class="verse-ref">여호수아 1:9</span>
-                </div>
-                <button class="btn" onclick="resetQuiz()">다시 진단하기</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. 말씀 중심 가이드라인 상세 설명 -->
-    <div class="section">
-        <h2>📋 말씀 중심의 실행 지침</h2>
-        <h3>1. 말씀의 거울로 마음을 비추십시오.</h3>
-        <p>염려가 찾아올 때 가장 먼저 해야 할 일은 이 생각이 하나님이 주시는 마음인지를 구별하는 것입니다. 말씀에 어긋나는 부정적인 상상이나 정죄감은 즉시 차단해야 합니다.</p>
+    <!-- 와이드 메인 레이아웃 시작 -->
+    <div class="main-layout">
         
-        <h3>2. 기도로 염려의 주인을 바꾸십시오.</h3>
-        <p>내가 쥐고 있으면 염려이지만, 주님께 올려드리면 기도의 제목이 됩니다. 감사의 고백과 함께 소망을 주님께 두십시오.</p>
-        <div class="verse-card">
-            "아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라 그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라"
-            <span class="verse-ref">빌립보서 4:6-7</span>
+        <!-- 왼쪽 패널: 대형 트리 다이어그램 (넓은 화면을 꽉 채움) -->
+        <div class="section">
+            <h2>📊 통합 염려 대처 트리 (Decision Tree)</h2>
+            <div class="mermaid-box">
+                <div class="mermaid">
+                    graph TD
+                        A([시작: 염려와 걱정이 밀려올 때]) --> B["[1단계 기도] 무릎 꿇고 기도하며<br>이 염려의 실체를 직면하기<br>(빌 4:6-7)"]
+                        
+                        B --> C{2. 말씀의 분별:<br>내가 바꿀 수 없는 영역<br>(주권)인가, 순종의 영역인가?}
+                        
+                        C -- "하나님의 주권 영역<br>(가상 불안/과거/미래/타인)" --> D[3-A. 온전한 신뢰 & 기도로 맡기기]
+                        D --> D1["• 세상 두려움 끊기 (딤후 1:7)<br>• 주님께 짐 넘기기 (벧전 5:7)<br>• 내일 일은 내일 (마 6:34)"]
+                        
+                        C -- "지혜와 순종의 영역<br>(현실 문제/맡겨진 사명)" --> E{3-B. 주님이 오늘 내게<br>요구하시는 구체적인<br>순종이 있는가?}
+                        
+                        E -- 아니오 (지혜를 구하며 대기) --> F[잠잠히 기도하며 평강 구하기]
+                        E -- 예 (행동이 필요한 때) --> G[믿음의 행동 즉시 실행]
+                        
+                        F --> H1["• 하나님의 때를 기다리기<br>• 선하심을 신뢰하기 (롬 8:28)"]
+                        G --> G1["• 계획 세우기 (잠 16:9)<br>• 담대히 첫 발 내딛기 (수 1:9)"]
+                        
+                        D1 --> Z([종료: 주님이 주시는 평강 도달])
+                        H1 --> Z
+                        G1 --> Z
+                </div>
+            </div>
         </div>
 
-        <h3>3. '오늘'이라는 좁은 문을 걸어가십시오.</h3>
-        <p>아직 오지 않은 내일의 짐을 오늘로 가저오지 마십시오. 오늘 내게 허락하신 작은 일에 최선을 다하며 주님과 동행하는 것이 염려를 이기는 비결입니다.</p>
-    </div>
+        <!-- 오른쪽 패널: 모바일에서는 아래로 가고, PC에서는 우측 상단에 고정됨 -->
+        <div class="sticky-aside">
+            <!-- 실시간 진단 도구 -->
+            <div class="section" style="margin-bottom: 30px;">
+                <h2>🛠️ 실시간 염려 분별 가이드</h2>
+                <div class="quiz-container">
+                    <!-- 질문 1 -->
+                    <div id="q1">
+                        <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-color);">[1단계 기도] 먼저 감정의 소음을 가라앉히고 하나님 앞에 이 걱정을 올려드린 후, 아래 버튼을 눌러 분별을 시작하세요.</p>
+                        <div class="btn-group">
+                            <button class="btn btn-accent" onclick="nextStep('q1', 'q2')">기도했습니다 (분별 시작)</button>
+                        </div>
+                    </div>
+
+                    <!-- 질문 2 -->
+                    <div id="q2" class="hidden">
+                        <p style="font-size: 1.15rem; font-weight: bold;">Q2. 지금 하는 걱정이 내가 힘써서 바꿀 수 없는 영역(과거, 미래, 타인의 마음)인가요, 아니면 오늘 감당해야 할 일인가요?</p>
+                        <div class="btn-group">
+                            <button class="btn" onclick="nextStep('q2', 'result-trust')">내가 바꿀 수 없는 영역(주권)이다</button>
+                            <button class="btn btn-accent" onclick="nextStep('q2', 'q3')">오늘 감당해야 할 현실적인 일이다</button>
+                        </div>
+                    </div>
+
+                    <!-- 질문 3 -->
+                    <div id="q3" class="hidden">
+                        <p style="font-size: 1.15rem; font-weight: bold;">Q3. 이 문제에 대해 주님이 오늘 내게 요구하시는 구체적인 행동이나 순종이 명확히 떠오르나요?</p>
+                        <div class="btn-group">
+                            <button class="btn btn-accent" onclick="nextStep('q3', 'result-action')">예, 제가 행동해야 할 영역이 있습니다</button>
+                            <button class="btn" onclick="nextStep('q3', 'result-wait')">아니오, 지혜를 구하며 기다려야 합니다</button>
+                        </div>
+                    </div>
+
+                    <!-- 결과: 주권 인정 -->
+                    <div id="result-trust" class="hidden">
+                        <h3>🙏 처방: 주권 인정 & 기도로 맡기기</h3>
+                        <p>내가 쥐고 흔들 수 없는 영역입니다. 걱정이라는 짐을 기도로 하나님 손에 완전히 패스하세요.</p>
+                        <div class="verse-card">
+                            "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라"
+                            <span class="verse-ref">베드로전서 5:7</span>
+                        </div>
+                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
+                    </div>
+
+                    <!-- 결과: 대기/평강 -->
+                    <div id="result-wait" class="hidden">
+                        <h3>⏳ 처방: 잠잠히 기도하며 평강 구하기</h3>
+                        <p>섣부른 인간의 조급함을 내려놓고, 하나님의 선하신 타이밍을 신뢰하며 잠잠히 평강을 구하세요.</p>
+                        <div class="verse-card">
+                            "우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라"
+                            <span class="verse-ref">로마서 8:28</span>
+                        </div>
+                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
+                    </div>
+
+                    <!-- 결과: 행동 실행 -->
+                    <div id="result-action" class="hidden">
+                        <h3>🏃 처방: 믿음의 행동 즉시 실행 (Action)</h3>
+                        <p>두려움에 멈춰 서지 마세요. 오늘 당장 실행할 수 있는 가장 작은 첫걸음을 주님 의지하며 내딛으십시오.</p>
+                        <div class="verse-card">
+                            "강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라"
+                            <span class="verse-ref">여호수아 1:9</span>
+                        </div>
+                        <button class="btn" style="margin-top:15px;" onclick="resetQuiz()">다시 분별하기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 텍스트 지침 영역 -->
+            <div class="section">
+                <h2>📋 와이드 스크린 활용 지침</h2>
+                <p style="font-size: 0.95rem; margin-bottom: 0;">왼쪽의 <strong>통합 대형 트리 다이어그램</strong>을 보며 전체 지도를 머릿속에 그리세요. 염려가 찾아올 때마다 오른쪽의 <strong>실시간 분별기</strong>를 클릭해가며 생각을 정돈할 수 있습니다.</p>
+            </div>
+        </div>
+    </div> <!-- .main-layout 끝 -->
 
     <footer>
         <p>© 2026 성경적 염려 대처 가이드라인. 모든 마음의 평안을 기원합니다.</p>
     </footer>
-</div>
+</div> <!-- .container 끝 -->
 
-<!-- 인터랙티브 스크립트 기능 -->
+<!-- 인터랙티브 화면 전환을 위한 자바스크립트 기능 -->
 <script>
     function nextStep(currentId, nextId) {
         document.getElementById(currentId).classList.add('hidden');
@@ -236,12 +300,11 @@
     }
 
     function resetQuiz() {
-        // 모든 결과 및 질문 단계를 감춤
         document.getElementById('q2').classList.add('hidden');
-        document.getElementById('result-abstract').classList.add('hidden');
+        document.getElementById('q3').classList.add('hidden');
         document.getElementById('result-trust').classList.add('hidden');
+        document.getElementById('result-wait').classList.add('hidden');
         document.getElementById('result-action').classList.add('hidden');
-        // 첫 번째 질문만 다시 노출
         document.getElementById('q1').classList.remove('hidden');
     }
 </script>
