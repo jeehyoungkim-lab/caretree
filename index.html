@@ -112,10 +112,34 @@
         .panel-y { border-color: var(--color-y); } .panel-y .verse-box { background: #f0f9ff; border-left-color: var(--color-y); color: #0284c7; } .panel-y .verse-ref { color: #0369a1; }
 
         @media (max-width: 1024px) {
-            .tab-grid { grid-template-columns: 1fr; }
-            .tab-button { padding: 15px; font-size: 2.2rem; flex-direction: row; justify-content: center; }
-            .content-panel { padding: 20px; }
+            /* 1. 모바일에서도 가로로 5글자가 나란히 서도록 강제 고정 */
+            .tab-grid { 
+                grid-template-columns: repeat(5, 1fr) !important; 
+                gap: 8px; /* 스마트폰 화면에 맞게 간격을 좁힘 */
+            }
+            
+            /* 2. 타일 내부의 서브 타이틀(영문/한글 단어)을 완전히 숨겨 글자 찌그러짐 차단 */
+            .tab-button .sub-title { 
+                display: none !important; 
+            }
+            
+            /* 3. 모바일 화면 크기에 맞춰 버튼 패딩과 글자 크기를 컴팩트하게 조절 */
+            .tab-button { 
+                padding: 15px 5px !important; 
+                font-size: 1.8rem !important; 
+                border-radius: 8px;
+            }
+            
+            /* 4. 하단 콘텐츠 패널 여백을 스마트폰 터치 환경에 맞게 최적화 */
+            .content-panel { 
+                padding: 20px 15px !important; 
+            }
         }
+
+
+
+
+        
     </style>
 </head>
 <body>
