@@ -97,8 +97,16 @@
         .inner-btn.active-btn { background: #f8fafc; color: var(--accent); border: 2px solid var(--accent); }
 
         /* 내부 접히는 영역 (높이 제한 완전 해제로 잘림 해결) */
-        .inner-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
-        .inner-content.open { max-height: 2000px; }
+        .inner-content { 
+          max-height: 0; 
+          overflow: hidden; 
+          transition: max-height 0.4s ease-out; 
+        }
+        .inner-content.open { 
+          max-height: 2000px; 
+          overflow: visible; 
+        }
+
 
         /* 성경 말씀 박스 디자인 */
         .verse-box { padding: 18px; font-style: italic; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--accent); }
