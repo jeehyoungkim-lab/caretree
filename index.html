@@ -122,40 +122,13 @@
           color: #0056b3;
           font-weight: bold;
         }
+
+
         
-        /* 마우스를 올리기 전 숨겨질 팝업 내용 */
-        .bible-tooltip .tooltip-text {
-          visibility: hidden;
-          opacity: 0;
-          
-          /* [수정] 다시 보기 편하게 너비를 확보하되, 최대 크기를 화면에 맞게 조절 */
-          width: 80vw;          /* 휴대폰 화면 가로 크기의 80% 차지 */
-          max-width: 280px;     /* 너무 넓어지지 않도록 상한선 지정 */
-          
-          background-color: rgba(33, 33, 33, 0.95);
-          color: #fff;
-          text-align: left;
-          border-radius: 8px;
-          padding: 10px 14px;
-          font-size: 0.85rem;
-          line-height: 1.45;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-        
-          /* [핵심 수정] 팝업 위치 고정 공식 */
-          position: absolute;
-          bottom: 140%;         /* 성경 구절 위로 넉넉하게 올림 */
-          left: 50%;
-          transform: translateX(-50%); /* 부모 요소 기준 무조건 수평 중앙 정렬 */
-          
-          transition: opacity 0.2s ease-in-out, visibility 0.2s;
-          z-index: 9999;
-        }
-        
-        /* 마우스를 올렸을 때(PC) 또는 손가락으로 터치했을 때(모바일) 팝업 표시 */
-        .bible-tooltip:hover .tooltip-text,
-        .bible-tooltip:active .tooltip-text {
-          visibility: visible;
-          opacity: 1;
+        /* 팝업을 감싸고 있는 글자(부모) 설정 */
+        .bible-tooltip {
+          position: relative; /* 팝업 위치의 기준점이 됩니다 */
+          display: inline-block;
         }
         
         /* 마우스를 올리거나 터치하기 전 숨겨질 팝업 내용 */
@@ -163,27 +136,30 @@
           visibility: hidden;
           opacity: 0;
           
-          /* [핵심 수정] 모바일 화면 크기에 맞게 너비 자동 조절 */
-          width: 60vw;          /* 휴대폰 화면 가로 크기의 60% 만큼만 차지하도록 제한 */
-          max-width: 300px;     /* PC 등 큰 화면에서는 최대 300px까지만 늘어남 */
+          /* [수정] 모바일 화면 크기에 맞게 너비와 줄바꿈 설정 */
+          width: max-content;        /* 텍스트 내용에 맞게 너비를 자동으로 잡음 */
+          min-width: 180px;          /* 너무 좁아지지 않도록 최소 너비 지정 */
+          max-width: 75vw;           /* 모바일 화면 가로 크기의 최대 75%까지만 차지 */
+          white-space: normal;       /* 글자가 상자 끝에 도달하면 다음 줄로 자동 줄바꿈 */
+          word-break: keep-all;      /* 한글 단어가 어색하게 깨지지 않고 단어 단위로 줄바꿈 */
           
           background-color: rgba(33, 33, 33, 0.95); /* 가독성 좋은 진한 배경색 */
           color: #fff;
           text-align: left;
           border-radius: 8px;
           padding: 10px 14px;
-          font-size: 0.85rem;   /* 모바일에서 보기 적당한 글자 크기 */
+          font-size: 0.85rem;        /* 모바일에서 보기 적당한 글자 크기 */
           line-height: 1.45;
           box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* 입체감 효과 */
         
-          /* [핵심 수정] 화면 중앙 및 위쪽 배치 팅김 방지 */
+          /* [핵심 수정] 모바일 화면 좌우 튕김 및 잘림 방지 */
           position: absolute;
-          bottom: 130%;         /* 성경 구절 약간 위에 배치 */
+          bottom: 140%;              /* 성경 구절 글자 위에 적당히 띄움 */
           left: 50%;
-          transform: translateX(-50%); /* 정확히 정렬 */
+          transform: translateX(-50%); /* 정확하게 중앙 정렬 */
           
           transition: opacity 0.2s ease-in-out, visibility 0.2s;
-          z-index: 9999;        /* 다른 글자에 절대 가려지지 않도록 최상단 배치 */
+          z-index: 99999;            /* 다른 글자에 절대 가려지지 않도록 최상단 배치 */
         }
         
         /* 마우스를 올렸을 때(PC) 또는 손가락으로 터치했을 때(모바일) 팝업 표시 */
@@ -192,7 +168,7 @@
           visibility: visible;
           opacity: 1;
         }
-      
+
 
         @media (max-width: 1024px) {
             /* 1. 모바일에서도 가로로 5글자가 나란히 서도록 강제 고정 */
