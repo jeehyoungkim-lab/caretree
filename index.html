@@ -144,30 +144,31 @@
           visibility: hidden;
           opacity: 0;
           
-          /* [수정] 모바일 화면 크기에 맞게 너비와 줄바꿈 설정 */
-            width: 85vw;               /* 팝업 상자 너비를 화면 가로의 85%로 널찍하게 고정 */
-            max-width: 320px;          /* 너무 커지지 않도록 폰 화면 크기 수준으로 상한선 설정 */
-          white-space: normal;       /* 글자가 상자 끝에 도달하면 다음 줄로 자동 줄바꿈 */
-          word-break: keep-all;      /* 한글 단어가 어색하게 깨지지 않고 단어 단위로 줄바꿈 */
+          /* [변경] 화면 중앙 고정에 어울리는 스마트폰 최적화 너비 */
+          width: 85vw;                 /* 휴대폰 화면 가로의 85% 크기 차지 */
+          max-width: 320px;            /* 화면이 큰 폰에서도 최대 320px로 예쁘게 제한 */
+          white-space: normal;         
+          word-break: keep-all;        /* 단어 단위로 깔끔하게 줄바꿈 */
           
-          background-color: rgba(33, 33, 33, 0.95); /* 가독성 좋은 진한 배경색 */
+          background-color: rgba(33, 33, 33, 0.95); 
           color: #fff;
-          text-align: left;
-          border-radius: 8px;
-          padding: 10px 14px;
-          font-size: 0.85rem;        /* 모바일에서 보기 적당한 글자 크기 */
-          line-height: 1.45;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* 입체감 효과 */
+          text-align: left;            /* 글 내용은 왼쪽 정렬 (가독성 중심) */
+          border-radius: 12px;         /* 팝업 창 느낌을 주도록 테두리를 조금 더 둥글게 */
+          padding: 16px 18px;          /* 안쪽 여백을 넉넉하게 주어 가독성 향상 */
+          font-size: 0.9rem;           /* 화면 중앙에 뜨므로 글씨를 아주 살짝 키움 */
+          line-height: 1.5;
+          box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.3); /* 화면 중앙에 뜨는 레이어 느낌의 깊은 그림자 */
         
-          /* [핵심 수정] 모바일 화면 좌우 튕김 및 잘림 방지 */
-          position: absolute;
-          bottom: 140%;              /* 성경 구절 글자 위에 적당히 띄움 */
-          left: 50%;
-          transform: translateX(-50%); /* 정확하게 중앙 정렬 */
+          /* [핵심 수정] 어떤 구절을 누르든 화면 정중앙에 고정시키는 공식 */
+          position: fixed;             /* 부모 글자가 아닌 '내 스마트폰 화면'을 기준으로 정렬 */
+          top: 50%;                    /* 화면 세로 50% 지점 */
+          left: 50%;                   /* 화면 가로 50% 지점 */
+          transform: translate(-50%, -50%); /* 내 팝업 상자의 정중앙을 화면 정중앙에 완벽 일치 */
           
           transition: opacity 0.2s ease-in-out, visibility 0.2s;
-          z-index: 99999;            /* 다른 글자에 절대 가려지지 않도록 최상단 배치 */
+          z-index: 999999;             /* 화면의 그 어떤 요소보다 무조건 최상단에 노출 */
         }
+
         
         /* 마우스를 올렸을 때(PC) 또는 손가락으로 터치했을 때(모바일) 팝업 표시 */
         .bible-tooltip:hover .tooltip-text,
